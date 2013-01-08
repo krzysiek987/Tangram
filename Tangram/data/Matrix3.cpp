@@ -14,7 +14,7 @@ void Matrix3::Print(void)
  printf("|%2.3lf,%2.3lf,%2.3lf,%2.3lf|\n",data[2][0], data[2][1], data[2][2]);
 }
 
-Matrix4 Matrix3::operator* (const Matrix3 gMatrix)
+Matrix3 Matrix3::operator* (const Matrix3 gMatrix)
 {
  int i,j,k;
  Matrix3 tmp;

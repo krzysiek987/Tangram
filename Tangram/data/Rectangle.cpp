@@ -1,57 +1,67 @@
 #include "Rectangle.h"
 
-Rectangle::Rectangle(){
-    for(int i=0;i<4;i++){
-        points[i]=new Point();
-    }
+Rect::Rect(){
+    xmin=0;
+    xmax=20;
+    ymin=0;
+    ymax=20;
+    points[0]=wxPoint(0,0);
+    points[1]=wxPoint(20,0);
+    points[2]=wxPoint(20,20);
+    points[3]=wxPoint(0,20);
 }
 
-Rectangle(Point p1,Point p2,Point p3, Point p4){
+Rect::Rect(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4){
     points[0]=p1;
     points[1]=p2;
     points[2]=p3;
     points[3]=p4;   
 }
-void Print(void){
-    printf("Rectangle:\n");
+void Rect::Print(void){
+    printf("Rect:\n");
     for(int i=0;i<4;i++){
-        points[i].Print();
+        printf("[%d,%d]\n",points[i].x,points[i].y);
     }
     printf("----------\n");   
 }
-void Set(Point p1,,Point p2,Point p3, Point p4){
+void Rect::Set(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4){
     points[0]=p1;
     points[1]=p2;
     points[2]=p3;
     points[3]=p4;   
 }
     
-void SetP1(Point p1){
+void Rect::SetP1(wxPoint p1){
     points[0]=p1;     
 }
-void SetP2(Point p2){
+void Rect::SetP2(wxPoint p2){
     points[1]=p2;
 }
-void SetP3(Point p3){
+void Rect::SetP3(wxPoint p3){
     points[2]=p3;    
 }
-void SetP4(Point p4){
+void Rect::SetP4(wxPoint p4){
     points[3]=p4;    
 }
     
-Point GetP1(){
+wxPoint Rect::GetP1(){
     return points[0];
 }
-Point GetP2(){
+wxPoint Rect::GetP2(){
     return points[1];
 }
-Point GetP3(){
+wxPoint Rect::GetP3(){
     return points[2];
 }
-Point GetP4(){
+wxPoint Rect::GetP4(){
     return points[3];
 }
+
+bool Rect::IsInner(int x,int y){
+ return true;   
+}
  
-Point[4] GetPoints(){
+wxPoint* Rect::GetPoints(){
     return points;   
 }
+

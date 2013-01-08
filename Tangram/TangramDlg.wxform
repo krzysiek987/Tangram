@@ -5,7 +5,7 @@ object frmNewForm: TfrmNewForm
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Tangram'
   ClientHeight = 389
-  ClientWidth = 721
+  ClientWidth = 355
   Color = clBtnFace
   OldCreateOrder = True
   PopupMenu = DesignerPopup.Owner
@@ -34,7 +34,7 @@ object frmNewForm: TfrmNewForm
   object WxBoxSizer1: TWxBoxSizer
     Left = 0
     Top = 0
-    Width = 721
+    Width = 355
     Height = 389
     Align = alClient
     TabOrder = 0
@@ -63,41 +63,6 @@ object frmNewForm: TfrmNewForm
       Wx_Alignment = [wxALIGN_CENTER, wxEXPAND]
       Wx_PaneCaption = 'WxPanel1'
       Wx_PaneName = 'WxPanel1_Pane'
-      Wx_Aui_Dock_Direction = wxAUI_DOCK_NONE
-      Wx_Aui_Dockable_Direction = []
-      Wx_Aui_Pane_Style = []
-      Wx_Aui_Pane_Buttons = []
-      Wx_BestSize_Height = 0
-      Wx_BestSize_Width = 0
-      Wx_MinSize_Height = 0
-      Wx_MinSize_Width = 0
-      Wx_MaxSize_Height = 0
-      Wx_MaxSize_Width = 0
-      Wx_Floating_Height = 0
-      Wx_Floating_Width = 0
-      Wx_Floating_X_Pos = 0
-      Wx_Floating_Y_Pos = 0
-    end
-    object WxPanel2: TWxPanel
-      Left = 407
-      Top = 122
-      Width = 185
-      Height = 147
-      TabOrder = 1
-      Wx_BKColor = clBlack
-      Wx_Class = 'wxPanel'
-      Wx_ControlOrientation = wxControlVertical
-      Wx_Default = False
-      Wx_EventList.Strings = (
-        'EVT_UPDATE_UI:OnUpdateUI')
-      Wx_FGColor = clBlack
-      Wx_GeneralStyle = []
-      Wx_Hidden = False
-      Wx_IDName = 'ID_WXPANEL2'
-      Wx_IDValue = 1003
-      Wx_Alignment = [wxALIGN_RIGHT, wxEXPAND]
-      Wx_PaneCaption = 'WxPanel2'
-      Wx_PaneName = 'WxPanel2_Pane'
       Wx_Aui_Dock_Direction = wxAUI_DOCK_NONE
       Wx_Aui_Dockable_Direction = []
       Wx_Aui_Pane_Style = []

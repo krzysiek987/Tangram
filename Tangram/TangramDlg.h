@@ -30,7 +30,9 @@
 #include <wx/sizer.h>
 ////Header Include End
 #include <wx/dcbuffer.h>
-#include "data/Rectangle.cpp"
+#include "data/Figure.cpp"
+#include "data/Rectangle.h"
+#include "data/Triangle.h"
 ////Dialog Style Start
 #undef TangramDlg_STYLE
 #define TangramDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
@@ -47,13 +49,16 @@ class TangramDlg : public wxDialog
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
 		void RepaintMainPanel();
 		void TangramDlgMiddleDown(wxMouseEvent& event);
+		void TangramDlgMouseEvents(wxMouseEvent& event);
+		void TangramDlgLeftDown(wxMouseEvent& event);
+		void PaintTans(wxBufferedDC& dc);
 	
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxPanel *WxPanel2;
+		Tan* tans[8];
 		wxPanel *WxPanel1;
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
@@ -66,7 +71,6 @@ class TangramDlg : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
-			ID_WXPANEL2 = 1003,
 			ID_WXPANEL1 = 1002,
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

@@ -1,6 +1,9 @@
+#ifndef _VECTOR3_H_
+#define _VECTOR3_H_
+
 #include <stdio.h>
 
-class Vector4
+class Vector3
 {
  public:
  double data[3];
@@ -11,3 +14,5 @@ class Vector4
  double GetY();
  double GetZ();
 };
+
+#endif

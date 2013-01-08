@@ -9,7 +9,9 @@
 ///------------------------------------------------------------------
 
 #include "TangramDlg.h"
-
+#include "data/Matrix3.cpp"
+#include "data/Rectangle.cpp"
+#include "data/Triangle.cpp"
 //Do not add custom headers
 //wxDev-C++ designer will remove them
 ////Header Include Start
@@ -56,9 +58,6 @@ void TangramDlg::CreateGUIControls()
 	WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(335, 344));
 	WxBoxSizer1->Add(WxPanel1, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5);
 
-	WxPanel2 = new wxPanel(this, ID_WXPANEL2, wxPoint(407, 122), wxSize(185, 147));
-	WxBoxSizer1->Add(WxPanel2, 0, wxALIGN_RIGHT | wxEXPAND | wxALL, 5);
-
 	SetTitle(_("Tangram"));
 	SetIcon(wxNullIcon);
 	
@@ -68,6 +67,9 @@ void TangramDlg::CreateGUIControls()
 	Center();
 	
 	////GUI Items Creation End
+	
+	tans[0]=new Rect();
+	tans[1]=new Rect();
 }
 
 void TangramDlg::OnClose(wxCloseEvent& /*event*/)
@@ -90,15 +92,27 @@ void TangramDlg::RepaintMainPanel(){
     dc.SetBackground(wxBrush(RGB(56,89,223)));
     dc.Clear(); 
     WxPanel1->GetSize(&w,&h);
-    dc.SetDeviceOrigin(w/2,h/2);
+    PaintTans(dc);
     
-    dc.DrawRectangle(-10,-10,10,10);
+
+}
+void TangramDlg::PaintTans(wxBufferedDC& dc){
+    dc.DrawPolygon(4,tans[0]->GetPoints());
+        
 }
 
 /*
- * TangramDlgMiddleDown
+ * TangramDlgMouseEvents
  */
-void TangramDlg::TangramDlgMiddleDown(wxMouseEvent& event)
+void TangramDlg::TangramDlgMouseEvents(wxMouseEvent& event)
+{
+	// insert your code here
+}
+
+/*
+ * TangramDlgLeftDown
+ */
+void TangramDlg::TangramDlgLeftDown(wxMouseEvent& event)
 {
 	// insert your code here
 }
