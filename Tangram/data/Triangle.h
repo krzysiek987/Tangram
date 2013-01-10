@@ -2,8 +2,9 @@
 #define _TRIANGLE_H_
 
 #include <stdio.h>
-#include "Figure.cpp"
-class Triangle : public Figure
+#include "Tan.cpp"
+#include "../PointUtils.cpp"
+class Triangle : public Tan
 {
  public:
     Triangle();
@@ -19,7 +20,11 @@ class Triangle : public Figure
     wxPoint GetP2();
     wxPoint GetP3();
     virtual wxPoint* GetPoints();
+    int GetSize();
+    
+    bool IsInner(int x,int y);
    
-    wxPoint points[3];  
+    wxPoint points[3];
+    static const int size=3;  
 };
 #endif

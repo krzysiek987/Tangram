@@ -14,7 +14,8 @@ object frmNewForm: TfrmNewForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  EVT_MIDDLE_DOWN = 'TangramDlgMiddleDown'
+  EVT_LEFT_DOWN = 'TangramDlgLeftDown0'
+  EVT_LEFT_UP = 'TangramDlgLeftUP'
   EVT_CLOSE = 'OnClose'
   Wx_ICON.Data = {07544269746D617000000000}
   Wx_Name = 'TangramDlg'
@@ -45,8 +46,8 @@ object frmNewForm: TfrmNewForm
     object WxPanel1: TWxPanel
       Left = 5
       Top = 5
-      Width = 335
-      Height = 344
+      Width = 800
+      Height = 600
       TabOrder = 0
       EVT_UPDATE_UI = 'WxPanel1UpdateUI'
       Wx_BKColor = clBlack

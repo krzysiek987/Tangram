@@ -30,13 +30,13 @@
 #include <wx/sizer.h>
 ////Header Include End
 #include <wx/dcbuffer.h>
-#include "data/Figure.cpp"
-#include "data/Rectangle.h"
+#include "data/Rect.h"
 #include "data/Triangle.h"
 ////Dialog Style Start
 #undef TangramDlg_STYLE
 #define TangramDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
+#define TANS_NO 8
 
 class TangramDlg : public wxDialog
 {
@@ -47,21 +47,24 @@ class TangramDlg : public wxDialog
 		TangramDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Tangram"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = TangramDlg_STYLE);
 		virtual ~TangramDlg();
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
-		void RepaintMainPanel();
+		void RepaintMainPanel(bool click=false);
 		void TangramDlgMiddleDown(wxMouseEvent& event);
 		void TangramDlgMouseEvents(wxMouseEvent& event);
 		void TangramDlgLeftDown(wxMouseEvent& event);
 		void PaintTans(wxBufferedDC& dc);
+		void TangramDlgLeftDown0(wxMouseEvent& event);
+		void TangramDlgLeftUP(wxMouseEvent& event);
 	
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		Tan* tans[8];
 		wxPanel *WxPanel1;
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
+		Tan *tans[TANS_NO];
+		bool mouseDown;
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

@@ -9,9 +9,10 @@
 ///------------------------------------------------------------------
 
 #include "TangramDlg.h"
-#include "data/Matrix3.cpp"
-#include "data/Rectangle.cpp"
-#include "data/Triangle.cpp"
+#include <wx/brush.h>
+#include <wx/colour.h>
+#include <wx/pen.h>
+#include <wx/msgdlg.h>
 //Do not add custom headers
 //wxDev-C++ designer will remove them
 ////Header Include Start
@@ -28,6 +29,8 @@ BEGIN_EVENT_TABLE(TangramDlg,wxDialog)
 	////Manual Code End
 	
 	EVT_CLOSE(TangramDlg::OnClose)
+	EVT_LEFT_DOWN(TangramDlg::TangramDlgLeftDown0)
+	EVT_LEFT_UP(TangramDlg::TangramDlgLeftUP)
 	
 	EVT_UPDATE_UI(ID_WXPANEL1,TangramDlg::WxPanel1UpdateUI)
 END_EVENT_TABLE()
@@ -55,7 +58,7 @@ void TangramDlg::CreateGUIControls()
 	this->SetSizer(WxBoxSizer1);
 	this->SetAutoLayout(true);
 
-	WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(335, 344));
+	WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(800, 600));
 	WxBoxSizer1->Add(WxPanel1, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5);
 
 	SetTitle(_("Tangram"));
@@ -68,8 +71,16 @@ void TangramDlg::CreateGUIControls()
 	
 	////GUI Items Creation End
 	
-	tans[0]=new Rect();
-	tans[1]=new Rect();
+	tans[0]=new Rect(wxPoint(200,400),wxPoint(100,300),wxPoint(200,200),wxPoint(300,300));
+	tans[1]=new Rect(wxPoint(300,300),wxPoint(300,100),wxPoint(400,0),wxPoint(400,200));
+	tans[2]=new Triangle(wxPoint(0,400),wxPoint(200,400),wxPoint(100,300));
+	tans[3]=new Triangle(wxPoint(200,400),wxPoint(400,400),wxPoint(400,200));
+	tans[4]=new Triangle(wxPoint(0,400),wxPoint(0,0),wxPoint(200,200));
+	tans[5]=new Triangle(wxPoint(300,300),wxPoint(300,100),wxPoint(200,200));
+	tans[6]=new Triangle(wxPoint(0,0),wxPoint(400,0),wxPoint(200,200));
+	tans[7]=new Triangle(wxPoint(200,200),wxPoint(300,300),wxPoint(300,100));
+	
+	mouseDown=false;
 }
 
 void TangramDlg::OnClose(wxCloseEvent& /*event*/)
@@ -85,7 +96,7 @@ void TangramDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event)
 	RepaintMainPanel();
 }
 
-void TangramDlg::RepaintMainPanel(){
+void TangramDlg::RepaintMainPanel(bool click){
     int w,h;
     wxClientDC dc1(WxPanel1);
     wxBufferedDC dc(&dc1); 
@@ -93,26 +104,48 @@ void TangramDlg::RepaintMainPanel(){
     dc.Clear(); 
     WxPanel1->GetSize(&w,&h);
     PaintTans(dc);
+    if(click){
+        dc.DrawRectangle(400,400,500,500);
+    }
     
 
 }
 void TangramDlg::PaintTans(wxBufferedDC& dc){
-    dc.DrawPolygon(4,tans[0]->GetPoints());
+    for(int i=0;i<TANS_NO;i++){
+        if(tans[i] != NULL) {
+            dc.SetPen(wxPen(wxColour(0,0,0), 3 ));
+            dc.SetBrush(wxBrush(wxColour(255*i/8,50,25)));
+            dc.DrawPolygon(tans[i]->GetSize(),tans[i]->GetPoints());
+        }
+    }
+    
         
 }
 
+
+
 /*
- * TangramDlgMouseEvents
+ * TangramDlgLeftDown0
  */
-void TangramDlg::TangramDlgMouseEvents(wxMouseEvent& event)
+void TangramDlg::TangramDlgLeftDown0(wxMouseEvent& event)
 {
+    wxMessageDialog *dial = new wxMessageDialog(NULL, wxT("Download completed"), wxT("Info"), wxOK);
+    dial->ShowModal();
+    mouseDown=true;
+    RepaintMainPanel(true);
+    for(int i=0;i<TANS_NO;i++){
+        if(tans[i]->IsInner(event.GetX(), event.GetY())){
+               RepaintMainPanel(true);
+        }
+    }
 	// insert your code here
 }
 
 /*
- * TangramDlgLeftDown
+ * TangramDlgLeftUP
  */
-void TangramDlg::TangramDlgLeftDown(wxMouseEvent& event)
+void TangramDlg::TangramDlgLeftUP(wxMouseEvent& event)
 {
+    mouseDown=false;
 	// insert your code here
 }

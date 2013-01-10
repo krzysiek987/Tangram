@@ -86,7 +86,7 @@ ProductName=
 ProductVersion=
 AutoIncBuildNrOnRebuild=0
 AutoIncBuildNrOnCompile=0
-UnitCount=8
+UnitCount=10
 
 [Profile1]
 ProfileName=MingW gcc
@@ -145,7 +145,7 @@ CompilerSet=9
 CompilerType=9
 
 [Unit9]
-FileName=data\Rectangle.cpp
+FileName=data\Triangle.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1
@@ -155,9 +155,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=data\Rectangle.h
+FileName=PointUtils.cpp
 CompileCpp=1
-Folder=Tangram
+Folder=
 Compile=1
 Link=1
 Priority=1000
@@ -165,7 +165,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=data\Rectangle.cpp
+FileName=data\Rect.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1
@@ -175,7 +175,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=data\Point.cpp
+FileName=data\Tan.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1
