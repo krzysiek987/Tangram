@@ -12,10 +12,10 @@ Rect::Rect(){
 }
 
 Rect::Rect(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4){
-    xmin=PointUtils::MinX(p1,p2,p3,p4);
-    xmax=PointUtils::MaxX(p1,p2,p3,p4);
-    ymin=PointUtils::MinY(p1,p2,p3,p4);
-    ymax=PointUtils::MaxY(p1,p2,p3,p4);
+    xmin=MinMaxUtils::MinX(p1,p2,p3,p4);
+    xmax=MinMaxUtils::MaxX(p1,p2,p3,p4);
+    ymin=MinMaxUtils::MinY(p1,p2,p3,p4);
+    ymax=MinMaxUtils::MaxY(p1,p2,p3,p4);
     points[0]=p1;
     points[1]=p2;
     points[2]=p3;
@@ -29,10 +29,10 @@ void Rect::Print(void){
     printf("----------\n");   
 }
 void Rect::Set(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4){
-    xmin=PointUtils::MinX(p1,p2,p3,p4);
-    xmax=PointUtils::MaxX(p1,p2,p3,p4);
-    ymin=PointUtils::MinY(p1,p2,p3,p4);
-    ymax=PointUtils::MaxY(p1,p2,p3,p4);
+    xmin=MinMaxUtils::MinX(p1,p2,p3,p4);
+    xmax=MinMaxUtils::MaxX(p1,p2,p3,p4);
+    ymin=MinMaxUtils::MinY(p1,p2,p3,p4);
+    ymax=MinMaxUtils::MaxY(p1,p2,p3,p4);
     points[0]=p1;
     points[1]=p2;
     points[2]=p3;
@@ -72,5 +72,55 @@ int Rect::GetSize(){
 }
 
 bool Rect::IsInner(int x,int y){
- return true;   
+    double radians=0.0;
+    wxPoint center=wxPoint(x,y);
+    for(int i=0;i<size;i++){
+        radians += VectorUtils::AngleBetweenPoints(points[i],center,points[(i+1)%size]);
+    }
+    return abs(radians-360.0) < EPSILON ? true : false;   
+}
+
+bool Rect::MoveX(int x){
+    if(xmin+x < 0 || xmax+x > WIDTH){
+        return false;   
+    }
+    else {
+        xmin+=x;
+        xmax+=x;
+        for(int i=0;i<size;i++){
+            points[i].x+=x;    
+        } 
+    }
+    return true; 
+}
+bool Rect::MoveY(int y){
+    if(ymin+y < 0 || ymax+y > HEIGHT){
+        return false;   
+    }
+    else {
+        ymin+=y;
+        ymax+=y;
+        for(int i=0;i<size;i++){
+            points[i].y+=y;    
+        } 
+    }
+    return true;   
+}
+
+bool Rect::Move(int x,int y){
+    if(xmin+x < 0 || xmax+x > WIDTH){
+        return false;   
+    }
+    if(ymin+y < 0 || ymax+y > HEIGHT){
+        return false;   
+    }
+    xmin+=x;
+    xmax+=x;
+    ymin+=y;
+    ymax+=y;
+    for(int i=0;i<size;i++){
+        points[i].x+=x;  
+        points[i].y+=y;    
+    } 
+    return true;
 }

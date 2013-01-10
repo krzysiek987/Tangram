@@ -1,15 +1,15 @@
 # Project: Tangram
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 10-01-13 01:54
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 10-01-13 19:30
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = "windres.exe"
-OBJ       = Objects/MingW/TangramApp.o Objects/MingW/TangramDlg.o Objects/MingW/Rect.o Objects/MingW/Tan.o Objects/MingW/Triangle.o Objects/MingW/PointUtils.o Objects/MingW/Tangram_private.res
-LINKOBJ   = "Objects/MingW/TangramApp.o" "Objects/MingW/TangramDlg.o" "Objects/MingW/Rect.o" "Objects/MingW/Tan.o" "Objects/MingW/Triangle.o" "Objects/MingW/PointUtils.o" Objects/MingW/Tangram_private.res
-LIBS      = -L"C:/Program Files (x86)/Dev-Cpp/lib/wx/gcc_lib" -L"C:/Program Files (x86)/Dev-Cpp/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/lib" -mwindows -l$(WXLIBNAME) -l$(WXLIBNAME)_gl -lwxscintilla -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  
+OBJ       = Objects/MingW/TangramApp.o Objects/MingW/TangramDlg.o Objects/MingW/TangramPanel.o Objects/MingW/Rect.o Objects/MingW/Tan.o Objects/MingW/Triangle.o Objects/MingW/Tangram_private.res
+LINKOBJ   = "Objects/MingW/TangramApp.o" "Objects/MingW/TangramDlg.o" "Objects/MingW/TangramPanel.o" "Objects/MingW/Rect.o" "Objects/MingW/Tan.o" "Objects/MingW/Triangle.o" Objects/MingW/Tangram_private.res
+LIBS      = -L"C:/Program Files (x86)/Dev-Cpp/lib/wx/gcc_lib" -L"C:/Program Files (x86)/Dev-Cpp/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/lib"  -l$(WXLIBNAME) -l$(WXLIBNAME)_gl -lwxscintilla -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  
 INCS      = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include"
 CXXINCS   = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include" -I"C:/Program Files (x86)/Dev-Cpp/" -I"C:/Program Files (x86)/Dev-Cpp/include/common"
 RCINCS    = --include-dir "C:/PROGRA~2/Dev-Cpp/include/common"
@@ -36,23 +36,23 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "$(BIN)" $(LIBS) 
 
-Objects/MingW/TangramApp.o: $(GLOBALDEPS) TangramApp.cpp TangramApp.h TangramDlg.h data/Rect.h data/Tan.cpp PointUtils.cpp data/Triangle.h data/Tan.cpp PointUtils.cpp
+Objects/MingW/TangramApp.o: $(GLOBALDEPS) TangramApp.cpp TangramApp.h TangramDlg.h data/Rect.h data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/Triangle.h data/Tan.cpp TangramPanel.h TangramDlg.h data/Constants.h
 	$(CPP) -c TangramApp.cpp -o Objects/MingW/TangramApp.o $(CXXFLAGS)
 
-Objects/MingW/TangramDlg.o: $(GLOBALDEPS) TangramDlg.cpp TangramDlg.h data/Rect.h data/Tan.cpp PointUtils.cpp data/Triangle.h data/Tan.cpp PointUtils.cpp
+Objects/MingW/TangramDlg.o: $(GLOBALDEPS) TangramDlg.cpp TangramDlg.h data/Rect.h data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/Triangle.h data/Tan.cpp TangramPanel.h TangramDlg.h data/Constants.h
 	$(CPP) -c TangramDlg.cpp -o Objects/MingW/TangramDlg.o $(CXXFLAGS)
 
-Objects/MingW/Rect.o: $(GLOBALDEPS) data/Rect.cpp data/Rect.h data/Tan.cpp PointUtils.cpp
+Objects/MingW/TangramPanel.o: $(GLOBALDEPS) TangramPanel.cpp TangramPanel.h TangramDlg.h data/Rect.h data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/Triangle.h data/Tan.cpp TangramPanel.h data/Constants.h
+	$(CPP) -c TangramPanel.cpp -o Objects/MingW/TangramPanel.o $(CXXFLAGS)
+
+Objects/MingW/Rect.o: $(GLOBALDEPS) data/Rect.cpp data/Rect.h data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h
 	$(CPP) -c data/Rect.cpp -o Objects/MingW/Rect.o $(CXXFLAGS)
 
-Objects/MingW/Tan.o: $(GLOBALDEPS) data/Tan.cpp
+Objects/MingW/Tan.o: $(GLOBALDEPS) data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h
 	$(CPP) -c data/Tan.cpp -o Objects/MingW/Tan.o $(CXXFLAGS)
 
-Objects/MingW/Triangle.o: $(GLOBALDEPS) data/Triangle.cpp data/Triangle.h data/Tan.cpp PointUtils.cpp
+Objects/MingW/Triangle.o: $(GLOBALDEPS) data/Triangle.cpp data/Triangle.h data/Tan.cpp utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h
 	$(CPP) -c data/Triangle.cpp -o Objects/MingW/Triangle.o $(CXXFLAGS)
-
-Objects/MingW/PointUtils.o: $(GLOBALDEPS) PointUtils.cpp
-	$(CPP) -c PointUtils.cpp -o Objects/MingW/PointUtils.o $(CXXFLAGS)
 
 Objects/MingW/Tangram_private.res: Objects/MingW/Tangram_private.rc TangramApp.rc 
 	$(WINDRES) --input-format=rc -o Objects/MingW/Tangram_private.res $(RCINCS) Objects/MingW/TANGRA~1.RC -O coff

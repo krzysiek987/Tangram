@@ -26,17 +26,20 @@
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
+#include <wx/button.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
 ////Header Include End
 #include <wx/dcbuffer.h>
 #include "data/Rect.h"
 #include "data/Triangle.h"
+#include "TangramPanel.h"
+#include "data/Constants.h"
 ////Dialog Style Start
 #undef TangramDlg_STYLE
 #define TangramDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
-#define TANS_NO 8
+
 
 class TangramDlg : public wxDialog
 {
@@ -47,24 +50,26 @@ class TangramDlg : public wxDialog
 		TangramDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Tangram"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = TangramDlg_STYLE);
 		virtual ~TangramDlg();
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
-		void RepaintMainPanel(bool click=false);
-		void TangramDlgMiddleDown(wxMouseEvent& event);
-		void TangramDlgMouseEvents(wxMouseEvent& event);
-		void TangramDlgLeftDown(wxMouseEvent& event);
+		void RepaintMainPanel();
 		void PaintTans(wxBufferedDC& dc);
-		void TangramDlgLeftDown0(wxMouseEvent& event);
-		void TangramDlgLeftUP(wxMouseEvent& event);
+        void MouseLeftDown(wxMouseEvent& event);
+        void MouseLeftUp(wxMouseEvent& event);
+        void MouseMoved(wxMouseEvent& event);
+        Tan* CheckIsIn(int x,int y);
 	
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
+		wxButton *WxButton1;
 		wxPanel *WxPanel1;
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
 		Tan *tans[TANS_NO];
-		bool mouseDown;
+		bool _mouseDown;
+		Tan *holded;
+		int holdedX,holdedY;
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
@@ -74,6 +79,7 @@ class TangramDlg : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_WXBUTTON1 = 1003,
 			ID_WXPANEL1 = 1002,
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

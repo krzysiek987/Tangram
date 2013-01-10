@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "Tan.cpp"
-#include "../PointUtils.cpp"
+
 class Rect : public Tan
 {
  public:
@@ -25,7 +25,12 @@ class Rect : public Tan
     int GetSize();
     
     bool IsInner(int x,int y);
+    
+    bool MoveX(int x);
+    bool MoveY(int y);
+    bool Move(int x,int y);
    
+ private:
     wxPoint points[4]; 
     static const int size=4;
 };

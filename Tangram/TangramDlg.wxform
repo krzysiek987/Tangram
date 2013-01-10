@@ -4,8 +4,8 @@ object frmNewForm: TfrmNewForm
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Tangram'
-  ClientHeight = 389
-  ClientWidth = 355
+  ClientHeight = 610
+  ClientWidth = 1127
   Color = clBtnFace
   OldCreateOrder = True
   PopupMenu = DesignerPopup.Owner
@@ -14,7 +14,6 @@ object frmNewForm: TfrmNewForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  EVT_LEFT_DOWN = 'TangramDlgLeftDown0'
   EVT_LEFT_UP = 'TangramDlgLeftUP'
   EVT_CLOSE = 'OnClose'
   Wx_ICON.Data = {07544269746D617000000000}
@@ -35,8 +34,8 @@ object frmNewForm: TfrmNewForm
   object WxBoxSizer1: TWxBoxSizer
     Left = 0
     Top = 0
-    Width = 355
-    Height = 389
+    Width = 1127
+    Height = 610
     Align = alClient
     TabOrder = 0
     Wx_Class = 'wxBoxSizer'
@@ -64,6 +63,43 @@ object frmNewForm: TfrmNewForm
       Wx_Alignment = [wxALIGN_CENTER, wxEXPAND]
       Wx_PaneCaption = 'WxPanel1'
       Wx_PaneName = 'WxPanel1_Pane'
+      Wx_Aui_Dock_Direction = wxAUI_DOCK_NONE
+      Wx_Aui_Dockable_Direction = []
+      Wx_Aui_Pane_Style = []
+      Wx_Aui_Pane_Buttons = []
+      Wx_BestSize_Height = 0
+      Wx_BestSize_Width = 0
+      Wx_MinSize_Height = 0
+      Wx_MinSize_Width = 0
+      Wx_MaxSize_Height = 0
+      Wx_MaxSize_Width = 0
+      Wx_Floating_Height = 0
+      Wx_Floating_Width = 0
+      Wx_Floating_X_Pos = 0
+      Wx_Floating_Y_Pos = 0
+    end
+    object WxButton1: TWxButton
+      Left = 815
+      Top = 292
+      Width = 75
+      Height = 25
+      Caption = 'WxButton1'
+      TabOrder = 1
+      Wx_BKColor = clBlack
+      Wx_ButtonStyle = []
+      Wx_Class = 'wxButton'
+      Wx_ControlOrientation = wxControlVertical
+      Wx_Default = False
+      Wx_EventList.Strings = (
+        'EVT_BUTTON:OnClick'
+        'EVT_UPDATE_UI:OnUpdateUI')
+      Wx_FGColor = clBlack
+      Wx_GeneralStyle = []
+      Wx_Hidden = False
+      Wx_IDName = 'ID_WXBUTTON1'
+      Wx_IDValue = 1003
+      Wx_PaneCaption = 'WxButton1'
+      Wx_PaneName = 'WxButton1_Pane'
       Wx_Aui_Dock_Direction = wxAUI_DOCK_NONE
       Wx_Aui_Dockable_Direction = []
       Wx_Aui_Pane_Style = []
