@@ -35,6 +35,8 @@
 #include "data/Triangle.h"
 #include "TangramPanel.h"
 #include "data/Constants.h"
+#include "data/vecmat.h"
+
 ////Dialog Style Start
 #undef TangramDlg_STYLE
 #define TangramDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
@@ -56,7 +58,8 @@ class TangramDlg : public wxDialog
         void MouseLeftUp(wxMouseEvent& event);
         void MouseMoved(wxMouseEvent& event);
         Tan* CheckIsIn(int x,int y);
-	
+	    void MoveHoldedTan(wxMouseEvent& event);
+        void RotateHoldedTan(wxMouseEvent& event);
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
@@ -67,9 +70,11 @@ class TangramDlg : public wxDialog
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
 		Tan *tans[TANS_NO];
-		bool _mouseDown;
+		bool isRotateMode;
 		Tan *holded;
 		int holdedX,holdedY;
+		wxPoint center;
+		Vector vectors[4];
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

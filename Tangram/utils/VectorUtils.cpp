@@ -19,7 +19,9 @@ public:
     static double AngleBetweenPoints(wxPoint p1,wxPoint p2,wxPoint p3){
         return AngleBetweenVectors(wxPoint(p1.x-p2.x,p1.y-p2.y),wxPoint(p3.x-p2.x,p3.y-p2.y))*180/M_PI;
     }
-
+    static double AngleBetweenPointsInRadians(wxPoint p1,wxPoint p2,wxPoint p3){
+        return AngleBetweenVectors(wxPoint(p1.x-p2.x,p1.y-p2.y),wxPoint(p3.x-p2.x,p3.y-p2.y));
+    }
 };
 
 #endif

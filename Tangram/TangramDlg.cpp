@@ -80,7 +80,7 @@ void TangramDlg::CreateGUIControls()
 	tans[5]=new Triangle(wxPoint(300,300),wxPoint(300,100),wxPoint(200,200)); //trojkat srodek
 	tans[6]=new Triangle(wxPoint(0,0),wxPoint(400,0),wxPoint(200,200)); // duzy trojkat gora
 	
-	_mouseDown=false;
+	isRotateMode=false;
 	holded=NULL;
 }
 
@@ -99,7 +99,6 @@ void TangramDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event)
 }
 
 void TangramDlg::MouseLeftDown(wxMouseEvent& event){
-    _mouseDown=true;
     Tan* hit=CheckIsIn(event.GetX(), event.GetY());
     if(hit != NULL){
         holded=hit;
@@ -108,18 +107,19 @@ void TangramDlg::MouseLeftDown(wxMouseEvent& event){
     }
 }
 void TangramDlg::MouseLeftUp(wxMouseEvent& event){
-    _mouseDown=false;
+    isRotateMode=false;
     holded=NULL;
+    holdedX=0;
+    holdedY=0;
 }
 void TangramDlg::MouseMoved(wxMouseEvent& event){
-    if(holded != NULL) {
-        printf("%d , %d \n",event.GetX(),event.GetY());
-        if(!holded->Move(event.GetX()-holdedX,event.GetY()-holdedY)) {
-            //printf("POZA");
-            return;
-        }  
-        holdedX=event.GetX();
-        holdedY=event.GetY(); 
+    if(holded != NULL ) {
+        if(!isRotateMode){
+            MoveHoldedTan(event);
+        }
+        else {
+            RotateHoldedTan(event);    
+        }
     };
 }
 
@@ -144,23 +144,71 @@ void TangramDlg::PaintTans(wxBufferedDC& dc){
 
 Tan* TangramDlg::CheckIsIn(int x,int y){
     for(int i=0;i<TANS_NO;i++){
-        printf("klik w %d , %d   ",x,y);
+        //printf("klik w %d , %d   ",x,y);
         if(tans[i]->IsIn(x,y)) {
-            
             if(tans[i]->IsInner(x, y)){
-                printf("trafiono %d   \n",i);
+                if(tans[i]->IsInCenterCircle(x,y)){
+                    isRotateMode=false;    
+                }
+                else {
+                    isRotateMode=true;
+                    center=tans[i]->GetCenter();
+                    printf("center : %d, %d ", center.x,center.y);
+                    wxPoint* points=tans[i]->GetPoints(); 
+                    printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
+                    for(int j=0;j<tans[i]->GetSize();j++){
+                        vectors[j].Set(points[j]-center);   
+                    }
+                    printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
+    
+                }
+                //printf("trafiono %d   \n",i);
                 return tans[i];
             } 
             else {
-                printf(" NIE trafiono %d   \n",i);  
+                //printf(" NIE trafiono %d   \n",i);  
             }
         }
         else {
-            printf(" NIE NIE NIE trafiono %d   \n",i); 
+            //printf(" NIE NIE NIE trafiono %d   \n",i); 
         } 
     }  
     return NULL;
 }
 
+void TangramDlg::MoveHoldedTan(wxMouseEvent& event){
+    //printf("przesuwam X %d -> %d , Y %d -> %d \n",holdedX,event.GetX(),holdedY,event.GetY());
+    ActualMoveInfo info=holded->Move(event.GetX()-holdedX,event.GetY()-holdedY); 
+    holdedX+=info.GetActualMoveX();
+    holdedY+=info.GetActualMoveY();   
+    //printf("handled [%d,%d]  \n",holdedX,holdedY);    
+}
 
-
+void TangramDlg::RotateHoldedTan(wxMouseEvent& event){
+    printf("obracam  hold [%d,%d] , center [%d,%d] ,  event [%d,%d] \n",holdedX,holdedY,center.x,center.y,event.GetX(),holdedY,event.GetY());
+    printf("obracam  hold - center [%d,%d] ,  event - center [%d,%d] \n",holdedX-center.x,holdedY-center.y,event.GetX()-center.x,event.GetY()-center.y);
+    wxPoint* points=holded->GetPoints();    
+    //printf("size - %d \n",holded->GetSize());
+    //printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
+    //printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
+    double rad=VectorUtils::AngleBetweenPointsInRadians(wxPoint(holdedX,holdedY),wxPoint(center.x,center.y),wxPoint(event.GetX(),event.GetY()));
+    //printf("degreee  %lf   \n",rad); 
+    if(holdedX>event.GetX() || holdedY < event.GetY()){
+        rad=-rad;   
+    }
+    if(rad>0.001){
+        Matrix matrix;
+        matrix.data[0][0]=cos(rad); matrix.data[0][1]=-sin(rad);     
+        matrix.data[1][0]=sin(rad); matrix.data[1][1]=cos(rad);
+        for(int i=0;i<holded->GetSize();i++){
+            vectors[i]=matrix*vectors[i];
+        }
+        holdedX=event.GetX();
+        holdedY=event.GetY();
+    }
+    for(int i=0;i<holded->GetSize();i++){    
+        points[i].x=vectors[i].GetX()+center.x;
+        points[i].y=vectors[i].GetY()+center.y;
+    }   
+    
+}

@@ -26,10 +26,6 @@ class Triangle : public Tan
     
     bool MoveX(int x);
     bool MoveY(int y);
-    bool Move(int x,int y);
- 
- private:
-    wxPoint points[3];
-    static const int size=3;  
+    ActualMoveInfo Move(int x,int y);
 };
 #endif

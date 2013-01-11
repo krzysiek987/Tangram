@@ -1,6 +1,7 @@
 #include "Triangle.h"
 
 Triangle::Triangle(){
+    size=3;
     xmin=0;
     xmax=20;
     ymin=0;
@@ -11,6 +12,7 @@ Triangle::Triangle(){
 }
 
 Triangle::Triangle(wxPoint p1,wxPoint p2,wxPoint p3){
+    size=3;
     xmin=MinMaxUtils::MinX(p1,p2,p3);
     xmax=MinMaxUtils::MaxX(p1,p2,p3);
     ymin=MinMaxUtils::MinY(p1,p2,p3);
@@ -76,12 +78,12 @@ int Triangle::GetSize(){
 }
 
 bool Triangle::IsInner(int x,int y){
-    double radians=0.0;
+    double degrees=0.0;
     wxPoint center=wxPoint(x,y);
     for(int i=0;i<size;i++){
-        radians += VectorUtils::AngleBetweenPoints(points[i],center,points[(i+1)%size]);
+        degrees += VectorUtils::AngleBetweenPoints(points[i],center,points[(i+1)%size]);
     }
-    return abs(radians-360.0) < EPSILON ? true : false;    
+    return abs(degrees-360.0) < EPSILON ? true : false;    
 }
 
 bool Triangle::MoveX(int x){
@@ -110,12 +112,15 @@ bool Triangle::MoveY(int y){
     }
     return true;   
 }
-bool Triangle::Move(int x,int y){
+ActualMoveInfo Triangle::Move(int x,int y){  
     if(xmin+x < 0 || xmax+x > WIDTH){
-        return false;   
+        x = xmin+x<0 ? -xmin : WIDTH-xmax;
+        //printf(" [%d,%d] x [%d,%d]   comp=%d\n", xmin,xmax,ymin,ymax,xmin+x<0);
+        //printf("przesuwam x o %d\n",x);
     }
     if(ymin+y < 0 || ymax+y > HEIGHT){
-        return false;   
+        y = ymin+y<0 ? -ymin : HEIGHT-ymax;
+        //printf("przesuwam y o %d\n",y);
     }
     xmin+=x;
     xmax+=x;
@@ -125,5 +130,5 @@ bool Triangle::Move(int x,int y){
         points[i].x+=x;  
         points[i].y+=y;    
     } 
-    return true;
+    return ActualMoveInfo(x,y);
 }

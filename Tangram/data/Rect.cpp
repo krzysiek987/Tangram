@@ -1,6 +1,7 @@
 #include "Rect.h"
 
 Rect::Rect(){
+    size=4;
     xmin=0;
     xmax=20;
     ymin=0;
@@ -12,6 +13,7 @@ Rect::Rect(){
 }
 
 Rect::Rect(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4){
+    size=4;
     xmin=MinMaxUtils::MinX(p1,p2,p3,p4);
     xmax=MinMaxUtils::MaxX(p1,p2,p3,p4);
     ymin=MinMaxUtils::MinY(p1,p2,p3,p4);
@@ -72,12 +74,12 @@ int Rect::GetSize(){
 }
 
 bool Rect::IsInner(int x,int y){
-    double radians=0.0;
+    double degrees=0.0;
     wxPoint center=wxPoint(x,y);
     for(int i=0;i<size;i++){
-        radians += VectorUtils::AngleBetweenPoints(points[i],center,points[(i+1)%size]);
+        degrees += VectorUtils::AngleBetweenPoints(points[i],center,points[(i+1)%size]);
     }
-    return abs(radians-360.0) < EPSILON ? true : false;   
+    return abs(degrees-360.0) < EPSILON ? true : false;   
 }
 
 bool Rect::MoveX(int x){
@@ -107,12 +109,15 @@ bool Rect::MoveY(int y){
     return true;   
 }
 
-bool Rect::Move(int x,int y){
-    if(xmin+x < 0 || xmax+x > WIDTH){
-        return false;   
+ActualMoveInfo Rect::Move(int x,int y){
+if(xmin+x < 0 || xmax+x > WIDTH){
+        x = xmin+x<0 ? -xmin : WIDTH-xmax;
+        //printf(" [%d,%d] x [%d,%d]   comp=%d\n", xmin,xmax,ymin,ymax,xmin+x<0);
+        //printf("przesuwam x o %d\n",x);
     }
     if(ymin+y < 0 || ymax+y > HEIGHT){
-        return false;   
+        y = ymin+y<0 ? -ymin : HEIGHT-ymax;
+        //printf("przesuwam y o %d\n",y);
     }
     xmin+=x;
     xmax+=x;
@@ -122,5 +127,5 @@ bool Rect::Move(int x,int y){
         points[i].x+=x;  
         points[i].y+=y;    
     } 
-    return true;
+    return ActualMoveInfo(x,y);
 }

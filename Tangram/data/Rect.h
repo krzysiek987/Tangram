@@ -28,10 +28,6 @@ class Rect : public Tan
     
     bool MoveX(int x);
     bool MoveY(int y);
-    bool Move(int x,int y);
-   
- private:
-    wxPoint points[4]; 
-    static const int size=4;
+    ActualMoveInfo Move(int x,int y);
 };
 #endif
