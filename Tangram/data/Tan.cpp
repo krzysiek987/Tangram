@@ -28,6 +28,31 @@ class Tan
             }
             return false;
         }
+        
+        bool Conflicts(Tan* toCheck,Tan** tans, Tan* holded){
+            wxPoint* pointsToCheck=toCheck->GetPoints();
+            for(int i=0;i<TANS_NO;i++){
+                for(int j=0;j<toCheck->GetSize();j++){
+                    if(tans[i]!=holded && tans[i]->IsIn(pointsToCheck[j].x,pointsToCheck[j].y)) {
+                        if(IsInner(toCheck,tans[i])) return true;
+                            break;
+                        }   
+                    }
+                }
+            return false;
+        }
+        bool IsInner(Tan* toCheck, Tan* conflicted){
+            wxPoint* pointsToCheck=toCheck->GetPoints();
+            wxPoint* pointsConflicted=conflicted->GetPoints();
+            for(int i=0;i<toCheck->GetSize();i++){
+                if(conflicted->IsInner(pointsToCheck[i].x,pointsToCheck[i].y)) return true;    
+            }   
+            for(int i=0;i<conflicted->GetSize();i++){
+                if(toCheck->IsInner(pointsConflicted[i].x,pointsConflicted[i].y)) return true;    
+            }
+            return false;
+        }
+        
         wxPoint GetCenter(){
             wxPoint* points=GetPoints();
             int centerX=0;
@@ -43,14 +68,16 @@ class Tan
         
         virtual bool MoveX(int x) =0;
         virtual bool MoveY(int y) =0;
-        virtual ActualMoveInfo Move(int x,int y) =0;
+        virtual ActualMoveInfo Move(int x,int y, Tan** tans) =0;
         
         virtual bool IsInner(int x,int y) =0;
         virtual wxPoint* GetPoints() =0;
         virtual int GetSize() =0;
+        virtual void SetP(int i,wxPoint p)=0;
+        wxPoint points[4];
     protected:
         int size;
-        wxPoint points[4];
+        
     };
     
 

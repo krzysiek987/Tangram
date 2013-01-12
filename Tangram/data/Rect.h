@@ -16,6 +16,7 @@ class Rect : public Tan
     void SetP2(wxPoint p2);
     void SetP3(wxPoint p3);
     void SetP4(wxPoint p4);
+    void SetP(int i,wxPoint p);
 
     wxPoint GetP1();
     wxPoint GetP2();
@@ -28,6 +29,6 @@ class Rect : public Tan
     
     bool MoveX(int x);
     bool MoveY(int y);
-    ActualMoveInfo Move(int x,int y);
+    ActualMoveInfo Move(int x,int y, Tan** tans);
 };
 #endif

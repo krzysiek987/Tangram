@@ -141,28 +141,53 @@ void TangramDlg::PaintTans(wxBufferedDC& dc){
         }
     }     
 }
+bool TangramDlg::IsIn(Tan* toCheck){
+    wxPoint* pointsToCheck=toCheck->GetPoints();
+    for(int i=0;i<TANS_NO;i++){
+        for(int j=0;j<toCheck->GetSize();j++){
+            if(tans[i]!= holded && tans[i]->IsIn(pointsToCheck[j].x,pointsToCheck[j].y)) {
+                if(IsInner(toCheck,tans[i])) return true;
+                break;
+            }   
+        }
+    }
+    return false;
+}
 
+bool TangramDlg::IsInner(Tan* toCheck, Tan* conflicted){
+    wxPoint* pointsToCheck=toCheck->GetPoints();
+    wxPoint* pointsConflicted=conflicted->GetPoints();
+    for(int i=0;i<toCheck->GetSize();i++){
+        if(conflicted->IsInner(pointsToCheck[i].x,pointsToCheck[i].y)) return true;    
+    }   
+    for(int i=0;i<conflicted->GetSize();i++){
+        if(toCheck->IsInner(pointsConflicted[i].x,pointsConflicted[i].y)) return true;    
+    }
+    return false;
+}
 Tan* TangramDlg::CheckIsIn(int x,int y){
     for(int i=0;i<TANS_NO;i++){
         //printf("klik w %d , %d   ",x,y);
         if(tans[i]->IsIn(x,y)) {
             if(tans[i]->IsInner(x, y)){
-                if(tans[i]->IsInCenterCircle(x,y)){
-                    isRotateMode=false;    
-                }
-                else {
-                    isRotateMode=true;
-                    center=tans[i]->GetCenter();
-                    printf("center : %d, %d ", center.x,center.y);
-                    wxPoint* points=tans[i]->GetPoints(); 
-                    printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
-                    for(int j=0;j<tans[i]->GetSize();j++){
-                        vectors[j].Set(points[j]-center);   
+                
+                    if(tans[i]->IsInCenterCircle(x,y)){
+                        isRotateMode=false;    
                     }
-                    printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
-    
-                }
-                //printf("trafiono %d   \n",i);
+                    else {
+                        isRotateMode=true;
+                        center=tans[i]->GetCenter();
+                        //printf("center : %d, %d ", center.x,center.y);
+                        wxPoint* points=tans[i]->GetPoints(); 
+                        //printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
+                        for(int j=0;j<tans[i]->GetSize();j++){
+                            vectors[j].Set(points[j]-center);   
+                        }
+                        //printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
+                
+                    }
+                    //printf("trafiono %d   \n",i);
+                
                 return tans[i];
             } 
             else {
@@ -178,37 +203,52 @@ Tan* TangramDlg::CheckIsIn(int x,int y){
 
 void TangramDlg::MoveHoldedTan(wxMouseEvent& event){
     //printf("przesuwam X %d -> %d , Y %d -> %d \n",holdedX,event.GetX(),holdedY,event.GetY());
-    ActualMoveInfo info=holded->Move(event.GetX()-holdedX,event.GetY()-holdedY); 
+    ActualMoveInfo info=holded->Move(event.GetX()-holdedX,event.GetY()-holdedY,tans); 
     holdedX+=info.GetActualMoveX();
     holdedY+=info.GetActualMoveY();   
     //printf("handled [%d,%d]  \n",holdedX,holdedY);    
 }
 
 void TangramDlg::RotateHoldedTan(wxMouseEvent& event){
-    printf("obracam  hold [%d,%d] , center [%d,%d] ,  event [%d,%d] \n",holdedX,holdedY,center.x,center.y,event.GetX(),holdedY,event.GetY());
-    printf("obracam  hold - center [%d,%d] ,  event - center [%d,%d] \n",holdedX-center.x,holdedY-center.y,event.GetX()-center.x,event.GetY()-center.y);
-    wxPoint* points=holded->GetPoints();    
+    //printf("obracam  hold [%d,%d] , center [%d,%d] ,  event [%d,%d] \n",holdedX,holdedY,center.x,center.y,event.GetX(),holdedY,event.GetY());
+    //printf("obracam  hold - center [%d,%d] ,  event - center [%d,%d] \n",holdedX-center.x,holdedY-center.y,event.GetX()-center.x,event.GetY()-center.y);
+    wxPoint* points=holded->GetPoints();
+    int eventX=event.GetX(),eventY=event.GetY();    
     //printf("size - %d \n",holded->GetSize());
     //printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
     //printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
-    double rad=VectorUtils::AngleBetweenPointsInRadians(wxPoint(holdedX,holdedY),wxPoint(center.x,center.y),wxPoint(event.GetX(),event.GetY()));
-    //printf("degreee  %lf   \n",rad); 
-    if(holdedX>event.GetX() || holdedY < event.GetY()){
-        rad=-rad;   
+    double rad=VectorUtils::AngleBetweenPointsInRadians(wxPoint(holdedX,holdedY),wxPoint(center.x,center.y),wxPoint(eventX,eventY));
+    //printf("degreee  %d   \n",VectorUtils::GetBlock(wxPoint(eventX,eventY),center)); 
+    if(VectorUtils::GetDirection(eventX,eventY,center.x,center.y,holdedX,holdedY)>0){
+        rad=-rad;
     }
-    if(rad>0.001){
-        Matrix matrix;
-        matrix.data[0][0]=cos(rad); matrix.data[0][1]=-sin(rad);     
-        matrix.data[1][0]=sin(rad); matrix.data[1][1]=cos(rad);
-        for(int i=0;i<holded->GetSize();i++){
-            vectors[i]=matrix*vectors[i];
-        }
-        holdedX=event.GetX();
-        holdedY=event.GetY();
+
+    Matrix matrix;
+    matrix.data[0][0]=cos(rad); matrix.data[0][1]=-sin(rad);     
+    matrix.data[1][0]=sin(rad); matrix.data[1][1]=cos(rad);
+    for(int i=0;i<holded->GetSize();i++){
+        vectors[i]=matrix*vectors[i];
     }
-    for(int i=0;i<holded->GetSize();i++){    
-        points[i].x=vectors[i].GetX()+center.x;
-        points[i].y=vectors[i].GetY()+center.y;
-    }   
     
+    bool result=false;
+    if(holded->GetSize()==3){
+        Tan* triangle = new Triangle(wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
+                                    wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
+                                    wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y));
+        result=IsIn(triangle);
+    } else if(holded->GetSize()==3){
+        Tan* rect=new Rect  (wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
+                            wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
+                            wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y),
+                            wxPoint(vectors[3].GetX()+center.x,vectors[3].GetY()+center.y));
+        result=IsIn(rect);
+    }
+    if(!result){
+        for(int i=0;i<holded->GetSize();i++){   
+            holded->SetP(i+1,wxPoint(vectors[i].GetX()+center.x,vectors[i].GetY()+center.y));
+        }   
+    
+        holdedX=eventX;
+        holdedY=eventY;
+    }
 }

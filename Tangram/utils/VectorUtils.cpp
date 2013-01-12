@@ -22,6 +22,19 @@ public:
     static double AngleBetweenPointsInRadians(wxPoint p1,wxPoint p2,wxPoint p3){
         return AngleBetweenVectors(wxPoint(p1.x-p2.x,p1.y-p2.y),wxPoint(p3.x-p2.x,p3.y-p2.y));
     }
+    
+    static int GetBlock(int  eventX,int eventY, int centerX, int centerY){
+        if(eventX >= centerX && eventY <= centerY) return 1;
+        else if(eventX < centerX && eventY <= centerY) return 2;
+        else if(eventX < centerX && eventY > centerY) return 3;
+        else return 4;
+    }
+    
+    static int GetDirection(int eventX, int eventY, int centerX, int centerY, int holdedX, int holdedY){        
+        int position=(holdedY - centerY)*(eventX - centerX) - (holdedX - centerX)*(eventY - centerY);
+        printf("position %d\n",position);
+        return position;
+    }
 };
 
 #endif

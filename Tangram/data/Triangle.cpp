@@ -39,25 +39,41 @@ void Triangle::Set(wxPoint p1,wxPoint p2,wxPoint p3){
 }
     
 void Triangle::SetP1(wxPoint p1){
-    xmin=MinMaxUtils::Min(xmin,p1.x);
-    xmax=MinMaxUtils::Max(xmax,p1.x);
-    ymin=MinMaxUtils::Min(ymin,p1.y);
-    ymax=MinMaxUtils::Max(ymax,p1.y);
-    points[0]=p1;     
+    points[0]=p1; 
+    xmin=MinMaxUtils::MinX(points[0],points[1],points[2]);
+    xmax=MinMaxUtils::MaxX(points[0],points[1],points[2]);
+    ymin=MinMaxUtils::MinY(points[0],points[1],points[2]);
+    ymax=MinMaxUtils::MaxY(points[0],points[1],points[2]);
 }
 void Triangle::SetP2(wxPoint p2){
-    xmin=MinMaxUtils::Min(xmin,p2.x);
-    xmax=MinMaxUtils::Max(xmax,p2.x);
-    ymin=MinMaxUtils::Min(ymin,p2.y);
-    ymax=MinMaxUtils::Max(ymax,p2.y);
     points[1]=p2;
+    xmin=MinMaxUtils::MinX(points[0],points[1],points[2]);
+    xmax=MinMaxUtils::MaxX(points[0],points[1],points[2]);
+    ymin=MinMaxUtils::MinY(points[0],points[1],points[2]);
+    ymax=MinMaxUtils::MaxY(points[0],points[1],points[2]);
 }
 void Triangle::SetP3(wxPoint p3){
-    xmin=MinMaxUtils::Min(xmin,p3.x);
-    xmax=MinMaxUtils::Max(xmax,p3.x);
-    ymin=MinMaxUtils::Min(ymin,p3.y);
-    ymax=MinMaxUtils::Max(ymax,p3.y);
-    points[2]=p3;    
+    points[2]=p3; 
+    xmin=MinMaxUtils::MinX(points[0],points[1],points[2]);
+    xmax=MinMaxUtils::MaxX(points[0],points[1],points[2]);
+    ymin=MinMaxUtils::MinY(points[0],points[1],points[2]);
+    ymax=MinMaxUtils::MaxY(points[0],points[1],points[2]);
+}
+
+void Triangle::SetP(int i,wxPoint p){
+    switch(i){
+        case 1:
+            SetP1(p);
+            break; 
+        case 2:
+            SetP2(p);
+            break; 
+        case 3:
+            SetP3(p);
+            break; 
+        default:
+            break;     
+    }
 }
 
     
@@ -112,7 +128,7 @@ bool Triangle::MoveY(int y){
     }
     return true;   
 }
-ActualMoveInfo Triangle::Move(int x,int y){  
+ActualMoveInfo Triangle::Move(int x,int y, Tan** tans){  
     if(xmin+x < 0 || xmax+x > WIDTH){
         x = xmin+x<0 ? -xmin : WIDTH-xmax;
         //printf(" [%d,%d] x [%d,%d]   comp=%d\n", xmin,xmax,ymin,ymax,xmin+x<0);
@@ -122,13 +138,21 @@ ActualMoveInfo Triangle::Move(int x,int y){
         y = ymin+y<0 ? -ymin : HEIGHT-ymax;
         //printf("przesuwam y o %d\n",y);
     }
-    xmin+=x;
-    xmax+=x;
-    ymin+=y;
-    ymax+=y;
-    for(int i=0;i<size;i++){
-        points[i].x+=x;  
-        points[i].y+=y;    
-    } 
-    return ActualMoveInfo(x,y);
+    
+    Triangle *triangle=new Triangle(wxPoint(points[0].x+x,points[0].y+y),
+                                    wxPoint(points[1].x+x,points[1].y+y),
+                                    wxPoint(points[2].x+x,points[2].y+y));
+    if(!Conflicts(triangle,tans,this)){                               
+        xmin+=x;
+        xmax+=x;
+        ymin+=y;
+        ymax+=y;
+        for(int i=0;i<size;i++){
+            points[i].x+=x;  
+            points[i].y+=y;    
+        } 
+        return ActualMoveInfo(x,y);
+    } else {
+        return ActualMoveInfo(0,0);   
+    }
 }

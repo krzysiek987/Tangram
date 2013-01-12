@@ -15,6 +15,7 @@ class Triangle : public Tan
     void SetP1(wxPoint p1);
     void SetP2(wxPoint p2);
     void SetP3(wxPoint p3);
+    void SetP(int i,wxPoint p);
 
     wxPoint GetP1();
     wxPoint GetP2();
@@ -26,6 +27,6 @@ class Triangle : public Tan
     
     bool MoveX(int x);
     bool MoveY(int y);
-    ActualMoveInfo Move(int x,int y);
+    ActualMoveInfo Move(int x,int y, Tan** tans);
 };
 #endif
