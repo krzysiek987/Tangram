@@ -1,7 +1,7 @@
 [Project]
 FileName=Tangram.dev
 Name=Tangram
-UnitCount=11
+UnitCount=12
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -145,16 +145,6 @@ CompilerSet=9
 CompilerType=9
 
 [Unit9]
-FileName=data\Tan.cpp
-CompileCpp=1
-Folder=Tangram
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
 FileName=data\Triangle.cpp
 CompileCpp=1
 Folder=Tangram
@@ -164,8 +154,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
-FileName=data\Rect.cpp
+[Unit10]
+FileName=data\vecmat.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1
@@ -174,8 +164,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
-FileName=TangramPanel.cpp
+[Unit8]
+FileName=data\Tan.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1
@@ -185,7 +175,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=data\vecmat.cpp
+FileName=panel\TangramPanel.cpp
+CompileCpp=1
+Folder=Tangram
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=data\Rect.cpp
 CompileCpp=1
 Folder=Tangram
 Compile=1

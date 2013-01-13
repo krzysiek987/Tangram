@@ -30,10 +30,13 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 ////Header Include End
+#include <wx/brush.h>
+#include <wx/colour.h>
+#include <wx/pen.h>
 #include <wx/dcbuffer.h>
 #include "data/Rect.h"
 #include "data/Triangle.h"
-#include "TangramPanel.h"
+#include "panel/TangramPanel.h"
 #include "data/Constants.h"
 #include "data/vecmat.h"
 
@@ -60,8 +63,8 @@ class TangramDlg : public wxDialog
         Tan* CheckIsIn(int x,int y);
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);
-        bool IsIn(Tan* toCheck);
-        bool IsInner(Tan* toCheck, Tan* conflicted);
+        void RotateVectors(double rad);
+        Tan* GetTestTan();
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.

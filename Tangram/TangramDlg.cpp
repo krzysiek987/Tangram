@@ -9,10 +9,7 @@
 ///------------------------------------------------------------------
 
 #include "TangramDlg.h"
-#include <wx/brush.h>
-#include <wx/colour.h>
-#include <wx/pen.h>
-#include <wx/msgdlg.h>
+
 //Do not add custom headers
 //wxDev-C++ designer will remove them
 ////Header Include Start
@@ -71,58 +68,38 @@ void TangramDlg::CreateGUIControls()
 	Center();
 	
 	////GUI Items Creation End
-	
+	//inicjalizuje figury (tak jak sa pociete)
 	tans[0]=new Rect(wxPoint(200,400),wxPoint(100,300),wxPoint(200,200),wxPoint(300,300)); //kwadrat
 	tans[1]=new Rect(wxPoint(300,300),wxPoint(300,100),wxPoint(400,0),wxPoint(400,200)); // rownoleglobok
+	tans[1]->type=1;
 	tans[2]=new Triangle(wxPoint(0,400),wxPoint(200,400),wxPoint(100,300)); //maly trojkat dol
 	tans[3]=new Triangle(wxPoint(300,400),wxPoint(500,400),wxPoint(500,200)); // trojkat dol
+	tans[3]->type=2;
 	tans[4]=new Triangle(wxPoint(0,400),wxPoint(0,0),wxPoint(200,200)); //duzy trojkat lewa
 	tans[5]=new Triangle(wxPoint(300,300),wxPoint(300,100),wxPoint(200,200)); //trojkat srodek
 	tans[6]=new Triangle(wxPoint(0,0),wxPoint(400,0),wxPoint(200,200)); // duzy trojkat gora
-	
+	//ustawiam na wstepnie flage odpowiadajaca za obrony na false i do aktualnie trzymanego obiektu wstawiam NULL
 	isRotateMode=false;
 	holded=NULL;
 }
 
 void TangramDlg::OnClose(wxCloseEvent& /*event*/)
 {
+    //kasuje wszystkie tany ktore byly wczeœniej tworzone przez new
     for(int i=0;i<TANS_NO;i++) delete tans[i];
 	Destroy();
 }
-
+/************************************** METODY MALUJ¥CE NA PANELU ***************************************/
 /*
- * WxPanel1UpdateUI
+ * WxPanel1UpdateUI event przemalowania panelu - wywo³uje dalsz¹ metodê która maluje tany na panelu
  */
 void TangramDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event)
 {
 	RepaintMainPanel();
 }
-
-void TangramDlg::MouseLeftDown(wxMouseEvent& event){
-    Tan* hit=CheckIsIn(event.GetX(), event.GetY());
-    if(hit != NULL){
-        holded=hit;
-        holdedX=event.GetX();
-        holdedY=event.GetY();
-    }
-}
-void TangramDlg::MouseLeftUp(wxMouseEvent& event){
-    isRotateMode=false;
-    holded=NULL;
-    holdedX=0;
-    holdedY=0;
-}
-void TangramDlg::MouseMoved(wxMouseEvent& event){
-    if(holded != NULL ) {
-        if(!isRotateMode){
-            MoveHoldedTan(event);
-        }
-        else {
-            RotateHoldedTan(event);    
-        }
-    };
-}
-
+/*
+ * Metoda przemalowuj¹ca panel
+ */
 void TangramDlg::RepaintMainPanel(){
     int w,h;
     wxClientDC dc1(WxPanel1);
@@ -141,114 +118,147 @@ void TangramDlg::PaintTans(wxBufferedDC& dc){
         }
     }     
 }
-bool TangramDlg::IsIn(Tan* toCheck){
-    wxPoint* pointsToCheck=toCheck->GetPoints();
-    for(int i=0;i<TANS_NO;i++){
-        for(int j=0;j<toCheck->GetSize();j++){
-            if(tans[i]!= holded && tans[i]->IsIn(pointsToCheck[j].x,pointsToCheck[j].y)) {
-                if(IsInner(toCheck,tans[i])) return true;
-                break;
-            }   
+/******************************** EVENTY ****************************************/
+/*
+ * Event klikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ */
+void TangramDlg::MouseLeftDown(wxMouseEvent& event){
+    //sprawdzam czy klikniêcie trafia w jakiœ tan (jesli trafia to jest zwracany)
+    Tan* hit=CheckIsIn(event.GetX(), event.GetY());
+    if(hit != NULL){
+        //wstawiam do obiektu holded (aktualnie trzymanego) trafiony myszk¹ i pobieram do holdedX,holdedY wspó³rzedne klikniêcia
+        holded=hit;
+        holdedX=event.GetX();
+        holdedY=event.GetY();
+    }
+}
+/*
+ * Event odklikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ */
+void TangramDlg::MouseLeftUp(wxMouseEvent& event){
+    //zeruje informacje o aktualnie trzymanym obiekcie i miejscu klikniêcia
+    isRotateMode=false;
+    holded=NULL;
+    holdedX=0;
+    holdedY=0;
+}
+/*
+ * Event przesuniecia myszki przekazywany z analogicznego eventu w TangramPanel
+ */
+void TangramDlg::MouseMoved(wxMouseEvent& event){
+    //jezeli jakis obiekt jest trzymany myszka
+    if(holded != NULL ) {
+        if(!isRotateMode){
+            //i nie jestesmy w trybie obracania przesuwamy go
+            MoveHoldedTan(event);
         }
-    }
-    return false;
+        else {
+            //w przeciwnym razie obracamy
+            RotateHoldedTan(event);    
+        }
+    };
 }
-
-bool TangramDlg::IsInner(Tan* toCheck, Tan* conflicted){
-    wxPoint* pointsToCheck=toCheck->GetPoints();
-    wxPoint* pointsConflicted=conflicted->GetPoints();
-    for(int i=0;i<toCheck->GetSize();i++){
-        if(conflicted->IsInner(pointsToCheck[i].x,pointsToCheck[i].y)) return true;    
-    }   
-    for(int i=0;i<conflicted->GetSize();i++){
-        if(toCheck->IsInner(pointsConflicted[i].x,pointsConflicted[i].y)) return true;    
-    }
-    return false;
-}
+/**************************************** METODY SPRAWDZAJACE KLIKNIECIA **********************************************/
+/*
+ * Metoda sprawdza czy w punkcie (x,y) jest jakas figura, jesli tak jest ona zwracana
+ */
 Tan* TangramDlg::CheckIsIn(int x,int y){
+    //iteruje po tanach, sprawdzajac najpierw czy (x,y) trafia w prostokat opisany na tanie
     for(int i=0;i<TANS_NO;i++){
-        //printf("klik w %d , %d   ",x,y);
         if(tans[i]->IsIn(x,y)) {
+            //jesli trafia to sprawdzam czy trafia dok³adnie w œrodek tana
             if(tans[i]->IsInner(x, y)){
-                
+                    //dodatkowo jeœli klikniecie jest w srodku figury ustawiam flage isRotateMode na false - odpowiada tryb przesuwania
                     if(tans[i]->IsInCenterCircle(x,y)){
                         isRotateMode=false;    
                     }
                     else {
+                        //w przeciwnym przypadku aktywny jest tryb obracania, pobierany jest srodek tana
+                        //nastepnie tan przesuwany jest do srodka ukladu wspolrzednych i zapisywany w tablicy vectors
                         isRotateMode=true;
                         center=tans[i]->GetCenter();
-                        //printf("center : %d, %d ", center.x,center.y);
                         wxPoint* points=tans[i]->GetPoints(); 
-                        //printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
                         for(int j=0;j<tans[i]->GetSize();j++){
                             vectors[j].Set(points[j]-center);   
                         }
-                        //printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
-                
                     }
-                    //printf("trafiono %d   \n",i);
-                
+                //trafiono - zwracam tan w który nast¹pi³o trafienie
                 return tans[i];
             } 
-            else {
-                //printf(" NIE trafiono %d   \n",i);  
-            }
         }
-        else {
-            //printf(" NIE NIE NIE trafiono %d   \n",i); 
-        } 
     }  
+    //zwracam NULL - nie trafiono
     return NULL;
 }
 
+/*
+ * Metoda przesuwa aktualnie trzymany tan o odleglosc wektor miedzy punktem klikniecia i poprzednio kliknietym punktem
+ */
 void TangramDlg::MoveHoldedTan(wxMouseEvent& event){
-    //printf("przesuwam X %d -> %d , Y %d -> %d \n",holdedX,event.GetX(),holdedY,event.GetY());
     ActualMoveInfo info=holded->Move(event.GetX()-holdedX,event.GetY()-holdedY,tans); 
+    //przesuwamy punkt w który bylo klikniêcie o tyle ile naprawde siê uda³o przesun¹æ
     holdedX+=info.GetActualMoveX();
-    holdedY+=info.GetActualMoveY();   
-    //printf("handled [%d,%d]  \n",holdedX,holdedY);    
+    holdedY+=info.GetActualMoveY();     
 }
 
+/*
+ * Metoda obraca aktualnie trzymany tan
+ */
 void TangramDlg::RotateHoldedTan(wxMouseEvent& event){
-    //printf("obracam  hold [%d,%d] , center [%d,%d] ,  event [%d,%d] \n",holdedX,holdedY,center.x,center.y,event.GetX(),holdedY,event.GetY());
-    //printf("obracam  hold - center [%d,%d] ,  event - center [%d,%d] \n",holdedX-center.x,holdedY-center.y,event.GetX()-center.x,event.GetY()-center.y);
-    wxPoint* points=holded->GetPoints();
-    int eventX=event.GetX(),eventY=event.GetY();    
-    //printf("size - %d \n",holded->GetSize());
-    //printf(" [%d,%d] , [%d,%d] , [%d,%d] , [%d,%d] \n",points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
-    //printf(" [%lf,%lf] , [%lf,%lf] , [%lf,%lf] , [%lf,%lf] \n",vectors[0].GetX(),vectors[0].GetY(),vectors[1].GetX(),vectors[1].GetY(),vectors[2].GetX(),vectors[2].GetY(),vectors[3].GetX(),vectors[3].GetY());//printf("hold: [%d,%d] ,  center:  [%d,%d],    event    [%d,%d]   \n",holdedX,holdedY,center.x,center.x,event.GetX(),event.GetY());    
+    int eventX=event.GetX(),eventY=event.GetY();  
+    //obliczam kat o jaki obrócony jest z iloczynu skalarnego i jesli kierunek ruchu  
+    //myszki byl przeciwnie do wskazówek zegara zamieniam wynik na przeciwny
     double rad=VectorUtils::AngleBetweenPointsInRadians(wxPoint(holdedX,holdedY),wxPoint(center.x,center.y),wxPoint(eventX,eventY));
-    //printf("degreee  %d   \n",VectorUtils::GetBlock(wxPoint(eventX,eventY),center)); 
     if(VectorUtils::GetDirection(eventX,eventY,center.x,center.y,holdedX,holdedY)>0){
         rad=-rad;
     }
+    //obracam tan ktory byl wczesniej przesuniety do srodka ukladu wspolrzednych
+    RotateVectors(rad);
+    //tworze tan ktory jest obroconym cofnietym wczesniejsze przesuniecie do srodka i sprawdzam
+    //czy ten testowy tan nie koliduje z którymœ z pozosta³ych
+    Tan* tan=GetTestTan();
+    if(tan!=NULL){
+        if(holded->Conflicts(tan,tans) || tan->IsOutsidePanel()){
+            RotateVectors(-rad);
+        }
+        else {
+            //przesuwam trzymany obiekt ze srodka ukladu wspolrzednych i ustawiam wspolrzedne ostatniego polozenia myszki
+            for(int i=0;i<holded->GetSize();i++){   
+                holded->SetP(i+1,wxPoint(vectors[i].GetX()+center.x,vectors[i].GetY()+center.y));
+            }   
+            holdedX=eventX;
+            holdedY=eventY;   
+        }
+        delete tan;
+    } 
+}
 
+/*
+ * Metoda obraca wektory w tablicy vectors o podany k¹t
+ */
+void TangramDlg::RotateVectors(double rad){
     Matrix matrix;
     matrix.data[0][0]=cos(rad); matrix.data[0][1]=-sin(rad);     
     matrix.data[1][0]=sin(rad); matrix.data[1][1]=cos(rad);
     for(int i=0;i<holded->GetSize();i++){
         vectors[i]=matrix*vectors[i];
     }
-    
-    bool result=false;
+}
+
+/*
+ * Metoda tworzy testowy tan przywracajac przechowywane punkty w tablicy vectors ze œrodka uk³adu wspó³rzêdnych
+ */
+Tan* TangramDlg::GetTestTan(){
     if(holded->GetSize()==3){
-        Tan* triangle = new Triangle(wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
-                                    wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
-                                    wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y));
-        result=IsIn(triangle);
-    } else if(holded->GetSize()==3){
-        Tan* rect=new Rect  (wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
+        return new Triangle(wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
+                                wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
+                                wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y));
+    } else if(holded->GetSize()==4){
+        return new Rect  (wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
                             wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
                             wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y),
                             wxPoint(vectors[3].GetX()+center.x,vectors[3].GetY()+center.y));
-        result=IsIn(rect);
     }
-    if(!result){
-        for(int i=0;i<holded->GetSize();i++){   
-            holded->SetP(i+1,wxPoint(vectors[i].GetX()+center.x,vectors[i].GetY()+center.y));
-        }   
-    
-        holdedX=eventX;
-        holdedY=eventY;
-    }
+    return NULL;
 }
+
