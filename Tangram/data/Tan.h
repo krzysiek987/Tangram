@@ -8,6 +8,7 @@
 #include "ActualMoveInfo.cpp"
 #include <cstring>
 #include "vecmat.h"
+#include "Shadow.h"
 
 /*
  * Klasa abstrakcyjna Tan po ktorej dziedzicz¹ figury
@@ -44,7 +45,7 @@ class Tan
         /*
          * Metoda sprawdza czy wierzcholki tana toCheck le¿a w tanie conflicted lub czy wierzcholki tana conflicted le¿a w tanie toCheck
          */
-        bool IsInner(Tan* toCheck, Tan* conflicted);    
+        //bool IsInner(Tan* toCheck, Tan* conflicted);    
         /*
          * Metoda sprawdzajaca czy punkt (x,y) trafia w tan
          */
@@ -84,9 +85,9 @@ class Tan
         wxPoint GetP3();
         wxPoint GetP4();
         /*
-         * Metoda sk³adaj¹ca kolejne przekszta³cenie
+         * Metoda ustawiaj¹ca cieñ aktualnie uk³adanej figury
          */
-        
+        void SetShadow(Shadow* shadow);
     protected:
         /*
          * Metody zmieniajace punkty tana
@@ -105,7 +106,9 @@ class Tan
         //ilosc wierzcholkow
         int size;   
         //macierz przekszta³cenia z pozycji pocz¹tkowej
-        Matrix matrix;    
+        Matrix matrix;
+        //WskaŸnik do cienia aktualnie uk³adanej figury
+        Shadow* shadow;    
     };
     
 

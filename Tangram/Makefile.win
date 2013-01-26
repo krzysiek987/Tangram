@@ -1,7 +1,7 @@
 # Project: Tangram
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 26-01-13 07:13
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 26-01-13 09:04
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe
@@ -36,10 +36,10 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "$(BIN)" $(LIBS) 
 
-Objects/MingW/TangramApp.o: $(GLOBALDEPS) TangramApp.cpp TangramApp.h TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h panel/TangramPanel.h TangramDlg.h data/Constants.h data/vecmat.h
+Objects/MingW/TangramApp.o: $(GLOBALDEPS) TangramApp.cpp TangramApp.h TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h panel/TangramPanel.h TangramDlg.h data/Constants.h data/vecmat.h
 	$(CPP) -c TangramApp.cpp -o Objects/MingW/TangramApp.o $(CXXFLAGS)
 
-Objects/MingW/TangramDlg.o: $(GLOBALDEPS) TangramDlg.cpp TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h panel/TangramPanel.h TangramDlg.h data/Constants.h data/vecmat.h
+Objects/MingW/TangramDlg.o: $(GLOBALDEPS) TangramDlg.cpp TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h panel/TangramPanel.h TangramDlg.h data/Constants.h data/vecmat.h
 	$(CPP) -c TangramDlg.cpp -o Objects/MingW/TangramDlg.o $(CXXFLAGS)
 
 Objects/MingW/MinMaxUtils.o: $(GLOBALDEPS) utils/MinMaxUtils.cpp
@@ -51,19 +51,19 @@ Objects/MingW/VectorUtils.o: $(GLOBALDEPS) utils/VectorUtils.cpp
 Objects/MingW/ActualMoveInfo.o: $(GLOBALDEPS) data/ActualMoveInfo.cpp
 	$(CPP) -c data/ActualMoveInfo.cpp -o Objects/MingW/ActualMoveInfo.o $(CXXFLAGS)
 
-Objects/MingW/Rect.o: $(GLOBALDEPS) data/Rect.cpp data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
+Objects/MingW/Rect.o: $(GLOBALDEPS) data/Rect.cpp data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
 	$(CPP) -c data/Rect.cpp -o Objects/MingW/Rect.o $(CXXFLAGS)
 
-Objects/MingW/Tan.o: $(GLOBALDEPS) data/Tan.cpp data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
+Objects/MingW/Tan.o: $(GLOBALDEPS) data/Tan.cpp data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
 	$(CPP) -c data/Tan.cpp -o Objects/MingW/Tan.o $(CXXFLAGS)
 
-Objects/MingW/Triangle.o: $(GLOBALDEPS) data/Triangle.cpp data/Triangle.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
+Objects/MingW/Triangle.o: $(GLOBALDEPS) data/Triangle.cpp data/Triangle.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h
 	$(CPP) -c data/Triangle.cpp -o Objects/MingW/Triangle.o $(CXXFLAGS)
 
 Objects/MingW/vecmat.o: $(GLOBALDEPS) data/vecmat.cpp data/vecmat.h
 	$(CPP) -c data/vecmat.cpp -o Objects/MingW/vecmat.o $(CXXFLAGS)
 
-Objects/MingW/TangramPanel.o: $(GLOBALDEPS) panel/TangramPanel.cpp panel/TangramPanel.h TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h panel/TangramPanel.h data/Constants.h data/vecmat.h
+Objects/MingW/TangramPanel.o: $(GLOBALDEPS) panel/TangramPanel.cpp panel/TangramPanel.h TangramDlg.h data/Rect.h data/Tan.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h data/Triangle.h data/Tan.h data/Shadow.h panel/TangramPanel.h data/Constants.h data/vecmat.h
 	$(CPP) -c panel/TangramPanel.cpp -o Objects/MingW/TangramPanel.o $(CXXFLAGS)
 
 Objects/MingW/Shadow.o: $(GLOBALDEPS) data/Shadow.cpp data/Shadow.h utils/MinMaxUtils.cpp utils/VectorUtils.cpp data/Constants.h data/ActualMoveInfo.cpp data/vecmat.h

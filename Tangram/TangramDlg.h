@@ -64,7 +64,7 @@ class TangramDlg : public wxDialog
         Tan* CheckIsIn(int x,int y);
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);
-        Matrix RotateTan(Tan *tan,double rad,wxPoint point);
+        bool Check();
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.

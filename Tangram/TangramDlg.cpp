@@ -79,6 +79,40 @@ void TangramDlg::CreateGUIControls()
 	//ustawiam na wstepnie flage odpowiadajaca za obrony na false i do aktualnie trzymanego obiektu wstawiam NULL
 	isRotateMode=false;
 	holded=NULL;
+	//dodanie cienia figury uk³adanej
+	int size = 12;
+	wxPoint points[12];
+	points[0] = wxPoint(200,200);
+	points[1] = wxPoint(200,314);
+	points[2] = wxPoint(485,314);
+	points[3] = wxPoint(485,200);
+	points[4] = wxPoint(428,200);
+	points[5] = wxPoint(428,257);
+	points[6] = wxPoint(371,257);
+	points[7] = wxPoint(371,200);
+	points[8] = wxPoint(314,200);
+	points[9] = wxPoint(314,257);
+	points[10] = wxPoint(257,257);
+	points[11] = wxPoint(257,200);
+	wxPoint check_points[12];
+	check_points[0] = wxPoint(198,198);
+	check_points[1] = wxPoint(198,316);
+	check_points[2] = wxPoint(489,316);
+	check_points[3] = wxPoint(487,198);
+	check_points[4] = wxPoint(426,198);
+	check_points[5] = wxPoint(426,255);
+	check_points[6] = wxPoint(373,255);
+	check_points[7] = wxPoint(373,198);
+	check_points[8] = wxPoint(312,198);
+	check_points[9] = wxPoint(312,255);
+	check_points[10] = wxPoint(259,255);
+	check_points[11] = wxPoint(259,198);
+	shadow.Set(size,points,check_points);
+	
+	for(int i=0;i<TANS_NO;++i) {
+        tans[i]->SetShadow(&shadow);   
+    }
+
 }
 
 void TangramDlg::OnClose(wxCloseEvent& /*event*/)
@@ -105,8 +139,15 @@ void TangramDlg::RepaintMainPanel(){
     dc.SetBackground(wxBrush(RGB(56,89,223)));
     dc.Clear(); 
     WxPanel1->GetSize(&w,&h);
-    PaintTans(dc);
+    
+    dc.SetPen(wxPen(wxColour(0,0,0), 3 ));
+    dc.SetBrush(wxBrush(wxColour(150,150,150)));
+    dc.DrawPolygon(shadow.GetSize(),shadow.GetPoints());
+    
+    PaintTans(dc);   
 }
+
+
 void TangramDlg::PaintTans(wxBufferedDC& dc){
     for(int i=0;i<TANS_NO;i++){
         if(tans[i] != NULL) {
@@ -139,6 +180,7 @@ void TangramDlg::MouseLeftUp(wxMouseEvent& event){
     holded=NULL;
     holdedX=0;
     holdedY=0;
+    Check();
 }
 /*
  * Event przesuniecia myszki przekazywany z analogicznego eventu w TangramPanel
@@ -230,5 +272,41 @@ void TangramDlg::RotateHoldedTan(wxMouseEvent& event){
         delete temp_tan;
         
     }
+}
+
+bool TangramDlg::Check()
+{
+    double degrees = 0.0;
+    double angle;
+    wxPoint* shadow_points = shadow.GetCheckPoints();
+    int shadow_size = shadow.GetSize();
+    for(int i=0;i<TANS_NO;++i){
+        wxPoint* tan_points = tans[i]->GetPoints();
+        for(int j=0;j<tans[i]->GetSize();++j) { 
+            for(int k=0;k<shadow.GetSize();++k){
+                angle = VectorUtils::AngleBetweenPoints(shadow_points[k],tan_points[j],shadow_points[(k+1)%shadow_size]);
+                if(VectorUtils::GetDirection(shadow_points[k].x,shadow_points[k].y,tan_points[j].x,tan_points[j].y,
+                        shadow_points[(k+1)%shadow_size].x,shadow_points[(k+1)%shadow_size].y)>0){
+                    angle=-angle;
+                }
+                degrees += angle;
+            }
+            if(abs(degrees-360.0) > EPSILON) return false;
+            degrees = 0.0;
+        }
+        wxPoint tan_center = tans[i]->GetCenter();
+        for(int k=0;k<shadow.GetSize();++k){
+            angle = VectorUtils::AngleBetweenPoints(shadow_points[k],tan_center,shadow_points[(k+1)%shadow_size]);
+            if(VectorUtils::GetDirection(shadow_points[k].x,shadow_points[k].y,tan_center.x,tan_center.y,
+                    shadow_points[(k+1)%shadow_size].x,shadow_points[(k+1)%shadow_size].y)>0){
+                angle=-angle;
+            }
+            degrees += angle;
+        }
+        if(abs(degrees-360.0) > EPSILON) return false;
+        degrees = 0.0;
+    }
+    printf("U³o¿one!!!\n");
+    return true;
 }
 

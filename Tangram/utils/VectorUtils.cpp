@@ -67,11 +67,7 @@ public:
         int d1=CountDet(a,b,c), d2=CountDet(a,b,d);
         int d3=CountDet(c,d,a), d4=CountDet(c,d,b);
         
-        if(abs(Sign(d1) - Sign(d2)) + abs(Sign(d3) - Sign(d4))==4) {
-            printf("%d, %d, %d, %d",d1,d2,d3,d4);
-            return true;
-        }
-        return false;
+        return abs(Sign(d1) - Sign(d2)) + abs(Sign(d3) - Sign(d4))==4;
     }
 
     //nazwyczajniejsze signum z tolerancj¹ (-80,80) dla wartoœci 0 

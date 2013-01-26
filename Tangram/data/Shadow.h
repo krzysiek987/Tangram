@@ -16,14 +16,16 @@ class Shadow
 {
     public:
         Shadow();
-        Shadow(int size,wxPoint* points);
+        Shadow(int size,wxPoint* points,wxPoint* check_points);
         ~Shadow();
         
-        void Set(int size,wxPoint* points);
+        void Set(int size,wxPoint* points,wxPoint* check_points);
         wxPoint* GetPoints();
+        wxPoint* GetCheckPoints();
         int GetSize();
     private:
         wxPoint* _points;
+        wxPoint* _check_points;
         int _size;   
 };
     

@@ -3,6 +3,7 @@
 Tan::Tan() {
     matrix.data[0][0] = 1.0;
     matrix.data[1][1] = 1.0;
+    shadow = NULL;
 }
 
 bool Tan::IsIn(int x,int y) {
@@ -61,7 +62,7 @@ bool Tan::Conflicts(Tan* toCheck,Tan** tans){
     return false;
 }
 
-bool Tan::IsInner(Tan* toCheck, Tan* conflicted){
+/*bool Tan::IsInner(Tan* toCheck, Tan* conflicted){
     wxPoint* pointsToCheck=toCheck->GetPoints();
     wxPoint* pointsConflicted=conflicted->GetPoints();
     for(int i=0;i<toCheck->GetSize();i++){
@@ -71,7 +72,7 @@ bool Tan::IsInner(Tan* toCheck, Tan* conflicted){
         if(toCheck->IsInner(pointsConflicted[i].x,pointsConflicted[i].y)) return true;    
     }
     return false;
-}
+}*/
 
 bool Tan::IsInner(int x,int y){
     double degrees=0.0;
@@ -146,11 +147,11 @@ wxPoint Tan::AttractionShift(Tan** tans){
     wxPoint temp_shift,shift=wxPoint(0,0);
     double min_norm = DISTANCE_OF_ATTRACTION;
     double norm;
+    wxPoint* check_points = GetPoints();
     
     for(int i=0;i<TANS_NO;++i){
         if(tans[i]!=this) {
             wxPoint* tan_points = tans[i]->GetPoints();
-            wxPoint* check_points = GetPoints();
             for(int j=0;j<GetSize();++j){
                 for(int k=0;k<tans[i]->GetSize();++k){
                     temp_shift = tan_points[k]-check_points[j];
@@ -162,6 +163,19 @@ wxPoint Tan::AttractionShift(Tan** tans){
                 }
             }
         }   
+    }
+    if(shadow) {
+        wxPoint* shadow_points = shadow->GetPoints();
+        for(int i=0;i<shadow->GetSize();++i) {
+            for(int j=0;j<GetSize();++j){
+                temp_shift = shadow_points[i]-check_points[j];
+                norm = VectorUtils::Norm(temp_shift);
+                if(norm < DISTANCE_OF_ATTRACTION && norm<min_norm){
+                    min_norm = norm;
+                    shift = temp_shift;
+                }                       
+            }
+        }
     }
   
     return shift;
@@ -230,7 +244,6 @@ void Tan::RotateTan(double radius,wxPoint rotate_point)
     Vector temp_vectors[4];
     
     for(int j=0;j<GetSize();j++){
-        matrix.Print();
         temp_vectors[j] = matrix*start_vectors[j];
         temp_point.x = temp_vectors[j].GetX();
         temp_point.y = temp_vectors[j].GetY();
@@ -255,4 +268,8 @@ void Tan::TranslateTan(wxPoint translation)
         points[j].x+=translation.x;
         points[j].y+=translation.y;
     }   
+}
+
+void Tan::SetShadow(Shadow* shadow) {
+  this->shadow = shadow;   
 }
