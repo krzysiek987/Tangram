@@ -56,9 +56,13 @@ public:
             [ a.x  a.y  1 ]
             [ b.x  b.y  1 ]
             [ c.x  c.y  1 ]
+        wynik jest równy wartoœci sk³adowej Z iloczynu wektorowemu (b-a)x(c-a),
+        a znak jest ten sam, co sinus k¹ta pomiêdzy wektorem (b-a), a (c-1).
      */
     static int CountDet(wxPoint a,wxPoint b, wxPoint c){
-         return a.x*b.y + b.x*c.y + c.x*a.y - c.x*b.y - a.x*c.y - b.x*a.y;
+         //return a.x*b.y + b.x*c.y + c.x*a.y - c.x*b.y - a.x*c.y - b.x*a.y;
+         //Równowa¿nie a dzia³a szybciej, bo mniej mno¿eñ
+         return (b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y);
     }
     /*
      * metoda sprawdza czy odcinki [a,b]  i  [c,d] przecinaj¹ siê
