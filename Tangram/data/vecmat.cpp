@@ -4,6 +4,11 @@ Vector::Vector()
  data[0]=0.0; data[1]=0.0; data[2]=1.0;
 }
 
+Vector::Vector(double d1,double d2)
+{
+ data[0]=d1; data[1]=d2; data[2]=1.0;
+}
+
 void Vector::Print(void)
 {
  printf("(%2.3lf,%2.3lf,%2.3lf)\n",data[0],data[1],data[2]);

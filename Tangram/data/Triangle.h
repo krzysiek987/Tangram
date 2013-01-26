@@ -16,8 +16,6 @@ class Triangle : public Tan
     void SetP2(wxPoint p2);
     void SetP3(wxPoint p3);
     void SetP4(wxPoint p4);
-    
-    bool IsInner(int x,int y);
 
     ActualMoveInfo Move(int x,int y, Tan** tans);
 };

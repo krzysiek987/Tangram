@@ -69,15 +69,13 @@ void TangramDlg::CreateGUIControls()
 	
 	////GUI Items Creation End
 	//inicjalizuje figury (tak jak sa pociete)
-	tans[0]=new Rect(wxPoint(200,400),wxPoint(100,300),wxPoint(200,200),wxPoint(300,300)); //kwadrat
-	tans[1]=new Rect(wxPoint(300,300),wxPoint(300,100),wxPoint(400,0),wxPoint(400,200)); // rownoleglobok
-	tans[1]->type=1;
-	tans[2]=new Triangle(wxPoint(0,400),wxPoint(200,400),wxPoint(100,300)); //maly trojkat dol
-	tans[3]=new Triangle(wxPoint(300,400),wxPoint(500,400),wxPoint(500,200)); // trojkat dol
-	tans[3]->type=2;
-	tans[4]=new Triangle(wxPoint(0,400),wxPoint(0,0),wxPoint(200,200)); //duzy trojkat lewa
-	tans[5]=new Triangle(wxPoint(300,300),wxPoint(300,100),wxPoint(200,200)); //trojkat srodek
-	tans[6]=new Triangle(wxPoint(0,0),wxPoint(400,0),wxPoint(200,200)); // duzy trojkat gora
+	tans[0]=new Rect(wxPoint(80,160),wxPoint(40,120),wxPoint(80,80),wxPoint(120,120)); //kwadrat
+	tans[1]=new Rect(wxPoint(120,120),wxPoint(120,40),wxPoint(160,0),wxPoint(160,80)); // rownoleglobok
+	tans[2]=new Triangle(wxPoint(0,160),wxPoint(80,160),wxPoint(40,120)); //maly trojkat dol
+	tans[3]=new Triangle(wxPoint(80,160),wxPoint(160,160),wxPoint(160,80)); // trojkat dol
+	tans[4]=new Triangle(wxPoint(0,160),wxPoint(0,0),wxPoint(80,80)); //duzy trojkat lewa
+	tans[5]=new Triangle(wxPoint(120,120),wxPoint(120,40),wxPoint(80,80)); //trojkat srodek
+	tans[6]=new Triangle(wxPoint(0,0),wxPoint(160,0),wxPoint(80,80)); // duzy trojkat gora
 	//ustawiam na wstepnie flage odpowiadajaca za obrony na false i do aktualnie trzymanego obiektu wstawiam NULL
 	isRotateMode=false;
 	holded=NULL;
@@ -177,10 +175,6 @@ Tan* TangramDlg::CheckIsIn(int x,int y){
                         //nastepnie tan przesuwany jest do srodka ukladu wspolrzednych i zapisywany w tablicy vectors
                         isRotateMode=true;
                         center=tans[i]->GetCenter();
-                        wxPoint* points=tans[i]->GetPoints(); 
-                        for(int j=0;j<tans[i]->GetSize();j++){
-                            vectors[j].Set(points[j]-center);   
-                        }
                     }
                 //trafiono - zwracam tan w który nast¹pi³o trafienie
                 return tans[i];
@@ -198,7 +192,7 @@ void TangramDlg::MoveHoldedTan(wxMouseEvent& event){
     ActualMoveInfo info=holded->Move(event.GetX()-holdedX,event.GetY()-holdedY,tans); 
     //przesuwamy punkt w który bylo klikniêcie o tyle ile naprawde siê uda³o przesun¹æ
     holdedX+=info.GetActualMoveX();
-    holdedY+=info.GetActualMoveY();     
+    holdedY+=info.GetActualMoveY();   
 }
 
 /*
@@ -209,56 +203,32 @@ void TangramDlg::RotateHoldedTan(wxMouseEvent& event){
     //obliczam kat o jaki obrócony jest z iloczynu skalarnego i jesli kierunek ruchu  
     //myszki byl przeciwnie do wskazówek zegara zamieniam wynik na przeciwny
     double rad=VectorUtils::AngleBetweenPointsInRadians(wxPoint(holdedX,holdedY),wxPoint(center.x,center.y),wxPoint(eventX,eventY));
-    if(VectorUtils::GetDirection(eventX,eventY,center.x,center.y,holdedX,holdedY)>0){
-        rad=-rad;
+    for(int i=0;i<ANGLE_NO;++i) {
+        if(rad>(2*(ANGLE_NO-i)-1)*M_PI/(2*ANGLE_NO)) {rad = (ANGLE_NO-i)*M_PI/ANGLE_NO;break;}
     }
-    //obracam tan ktory byl wczesniej przesuniety do srodka ukladu wspolrzednych
-    RotateVectors(rad);
-    //tworze tan ktory jest obroconym cofnietym wczesniejsze przesuniecie do srodka i sprawdzam
-    //czy ten testowy tan nie koliduje z którymœ z pozosta³ych
-    Tan* tan=GetTestTan();
-    if(tan!=NULL){
-        if(holded->Conflicts(tan,tans) || tan->IsOutsidePanel()){
-            RotateVectors(-rad);
+    if(rad>=M_PI/ANGLE_NO) {
+        if(VectorUtils::GetDirection(eventX,eventY,center.x,center.y,holdedX,holdedY)>0){
+            rad=-rad;
+        }
+        //obracam tan ktory byl wczesniej przesuniety do srodka ukladu wspolrzednych
+        Tan* temp_tan;
+        if(holded->GetSize()==3) {
+            temp_tan = new Triangle(holded->GetP1(),holded->GetP2(),holded->GetP3());
         }
         else {
+            temp_tan = new Rect(holded->GetP1(),holded->GetP2(),holded->GetP3(),holded->GetP4());
+        }
+        temp_tan->RotateTan(rad,center);
+        //tworze tan ktory jest obroconym cofnietym wczesniejsze przesuniecie do srodka i sprawdzam
+        //czy ten testowy tan nie koliduje z którymœ z pozosta³ych
+        if(!holded->Conflicts(temp_tan,tans) && !temp_tan->IsOutsidePanel()){
             //przesuwam trzymany obiekt ze srodka ukladu wspolrzednych i ustawiam wspolrzedne ostatniego polozenia myszki
-            for(int i=0;i<holded->GetSize();i++){   
-                holded->SetP(i+1,wxPoint(vectors[i].GetX()+center.x,vectors[i].GetY()+center.y));
-            }   
+            holded->RotateTan(rad,center);
             holdedX=eventX;
             holdedY=eventY;   
         }
-        delete tan;
-    } 
-}
-
-/*
- * Metoda obraca wektory w tablicy vectors o podany k¹t
- */
-void TangramDlg::RotateVectors(double rad){
-    Matrix matrix;
-    matrix.data[0][0]=cos(rad); matrix.data[0][1]=-sin(rad);     
-    matrix.data[1][0]=sin(rad); matrix.data[1][1]=cos(rad);
-    for(int i=0;i<holded->GetSize();i++){
-        vectors[i]=matrix*vectors[i];
+        delete temp_tan;
+        
     }
-}
-
-/*
- * Metoda tworzy testowy tan przywracajac przechowywane punkty w tablicy vectors ze œrodka uk³adu wspó³rzêdnych
- */
-Tan* TangramDlg::GetTestTan(){
-    if(holded->GetSize()==3){
-        return new Triangle(wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
-                                wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
-                                wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y));
-    } else if(holded->GetSize()==4){
-        return new Rect  (wxPoint(vectors[0].GetX()+center.x,vectors[0].GetY()+center.y),
-                            wxPoint(vectors[1].GetX()+center.x,vectors[1].GetY()+center.y),
-                            wxPoint(vectors[2].GetX()+center.x,vectors[2].GetY()+center.y),
-                            wxPoint(vectors[3].GetX()+center.x,vectors[3].GetY()+center.y));
-    }
-    return NULL;
 }
 

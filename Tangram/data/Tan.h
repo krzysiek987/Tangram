@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "ActualMoveInfo.cpp"
 #include <cstring>
+#include "vecmat.h"
 
 /*
  * Klasa abstrakcyjna Tan po ktorej dziedzicz¹ figury
@@ -14,15 +15,7 @@
 class Tan
 {
     public:
-        int type;
-        /*
-         * Metoda wirtualna odpowiadajace za przesuwanie tana
-         */
-        virtual ActualMoveInfo Move(int x,int y, Tan** tans) =0;        
-        /*
-         * Metoda wirtualna sprawdzajaca czy punkt (x,y) trafia w tan
-         */
-        virtual bool IsInner(int x,int y) =0;
+        Tan();      
         /*
          * Metoda sprawdza czy punkt (x,y) trafia w prostokat opisany na tanie
          */
@@ -52,7 +45,10 @@ class Tan
          * Metoda sprawdza czy wierzcholki tana toCheck le¿a w tanie conflicted lub czy wierzcholki tana conflicted le¿a w tanie toCheck
          */
         bool IsInner(Tan* toCheck, Tan* conflicted);    
-        
+        /*
+         * Metoda sprawdzajaca czy punkt (x,y) trafia w tan
+         */
+        bool IsInner(int x,int y);
         /*
          * Metoda wypisuje wierzcholki
          */
@@ -65,6 +61,20 @@ class Tan
          * Metoda zwraca œrodek tana
          */ 
         wxPoint GetCenter();  
+        
+        ActualMoveInfo Move(int x,int y, Tan** tans);
+        /*
+         * Metoda zwraca wartoœæ przesuniêcia dla przyci¹gania
+         */          
+        wxPoint AttractionShift(Tan** tans);
+        /*
+         * Metoda obraca tan o podany k¹t wzglêdem podanego punktu
+         */
+        void RotateTan(double radius,wxPoint rotate_point);
+        /*
+         * Metoda przesuwa tan o podany wektor
+         */
+        void TranslateTan(wxPoint translation);
         /*
          * Metoda zwracaj¹ce wierzcho³ki tana
          */ 
@@ -74,6 +84,11 @@ class Tan
         wxPoint GetP3();
         wxPoint GetP4();
         /*
+         * Metoda sk³adaj¹ca kolejne przekszta³cenie
+         */
+        
+    protected:
+        /*
          * Metody zmieniajace punkty tana
          */
         void SetP(int i,wxPoint p);
@@ -81,14 +96,16 @@ class Tan
         virtual void SetP2(wxPoint p2)=0;
         virtual void SetP3(wxPoint p3)=0;
         virtual void SetP4(wxPoint p4)=0;
-        
-    protected:
         //wspolrzedne prostok¹ta na którym opisany jest tan
         int xmin, xmax, ymin, ymax;
         //wierzcholki tana
+        Vector start_vectors[4];
+        //wierzcholki tana
         wxPoint points[4];
         //ilosc wierzcholkow
-        int size;       
+        int size;   
+        //macierz przekszta³cenia z pozycji pocz¹tkowej
+        Matrix matrix;    
     };
     
 

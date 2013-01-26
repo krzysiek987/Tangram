@@ -7,7 +7,7 @@
 ///            TangramDlg class declaration
 ///
 ///------------------------------------------------------------------
-
+//-mwindows
 #ifndef __TANGRAMDLG_H__
 #define __TANGRAMDLG_H__
 
@@ -36,6 +36,7 @@
 #include <wx/dcbuffer.h>
 #include "data/Rect.h"
 #include "data/Triangle.h"
+#include "data/Shadow.h"
 #include "panel/TangramPanel.h"
 #include "data/Constants.h"
 #include "data/vecmat.h"
@@ -63,8 +64,7 @@ class TangramDlg : public wxDialog
         Tan* CheckIsIn(int x,int y);
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);
-        void RotateVectors(double rad);
-        Tan* GetTestTan();
+        Matrix RotateTan(Tan *tan,double rad,wxPoint point);
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
@@ -75,11 +75,11 @@ class TangramDlg : public wxDialog
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
 		Tan *tans[TANS_NO];
+		Shadow shadow;
 		bool isRotateMode;
 		Tan *holded;
 		int holdedX,holdedY;
 		wxPoint center;
-		Vector vectors[4];
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

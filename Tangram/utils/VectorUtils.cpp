@@ -3,6 +3,7 @@
 
 #include <wx/gdicmn.h>
 #include <cmath>
+#include <iostream>
 
 /*
  * Klasa z metodami u¿ytkowymi dotycz¹cymi wektorów - iloczyny skalarne itd...
@@ -15,11 +16,15 @@ public:
     }
     //norma wektora
     static double Norm(wxPoint p1){
-        return sqrt(p1.x*p1.x+p1.y*p1.y);
+        return sqrt((double)p1.x*(double)p1.x+(double)p1.y*p1.y);
     }
     //k¹t miedzy dwoma wektorami
     static double AngleBetweenVectors(wxPoint p1,wxPoint p2){
-        return std::acos(ScalarProduct(p1,p2)/(Norm(p1)*Norm(p2)));
+        if((p1.x==0 && p1.y==0) || (p2.x==0 && p2.y==0)) return 0.0;
+        double cos_angle = (double)ScalarProduct(p1,p2)/(Norm(p1)*Norm(p2));
+        if(cos_angle>1.0) return 0.0;
+        if(cos_angle<-1.0) return M_PI;
+        return acos(cos_angle);
     }
     //kat oparty na trzech punktach p1,p2,p3
     static double AngleBetweenPoints(wxPoint p1,wxPoint p2,wxPoint p3){
@@ -58,16 +63,22 @@ public:
     /*
      * metoda sprawdza czy odcinki [a,b]  i  [c,d] przecinaj¹ siê
      */
-    static bool IsCrossing(wxPoint a,wxPoint b, wxPoint c, wxPoint d){  
+    static bool IsCrossing(wxPoint a,wxPoint b, wxPoint c, wxPoint d){ 
         int d1=CountDet(a,b,c), d2=CountDet(a,b,d);
         int d3=CountDet(c,d,a), d4=CountDet(c,d,b);
-        return abs(Sign(d1) - Sign(d2)) + abs(Sign(d3) - Sign(d4))==4;
+        
+        if(abs(Sign(d1) - Sign(d2)) + abs(Sign(d3) - Sign(d4))==4) {
+            printf("%d, %d, %d, %d",d1,d2,d3,d4);
+            return true;
+        }
+        return false;
     }
 
-    //nazwyczajniejsze signum
+    //nazwyczajniejsze signum z tolerancj¹ (-80,80) dla wartoœci 0 
+    //(pozwala to niezauwa¿anie nachodziæ na siebie tanom - wymagane, aby dobrze dzia³a³o przyci¹ganie)
     static int Sign(int x){
-        if(x>0) return 1;
-        if(x==0) return 0;
+        if(abs(x)<80) return 0;
+        if(x>0) return 1; 
         return -1;   
     } 
 };
