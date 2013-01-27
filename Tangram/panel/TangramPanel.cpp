@@ -5,6 +5,7 @@ BEGIN_EVENT_TABLE(TangramPanel, wxPanel)
  EVT_MOTION(TangramPanel::mouseMoved)
  EVT_LEFT_DOWN(TangramPanel::mouseDown)
  EVT_LEFT_UP(TangramPanel::mouseReleased)
+ EVT_LEFT_DCLICK(TangramPanel::mouseLeftDoubleClick)
  
 END_EVENT_TABLE()
 
@@ -24,4 +25,10 @@ void TangramPanel::mouseReleased(wxMouseEvent& event)
 {
     TangramDlg* parent=dynamic_cast<TangramDlg*>(_parent);
     parent->MouseLeftUp(event); 
+}
+
+void TangramPanel::mouseLeftDoubleClick(wxMouseEvent& event)
+{
+    TangramDlg* parent=dynamic_cast<TangramDlg*>(_parent);
+    parent->MouseLeftDoubleClick(event); 
 }

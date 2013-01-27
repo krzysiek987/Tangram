@@ -88,6 +88,8 @@ class Tan
          * Metoda ustawiaj¹ca cieñ aktualnie uk³adanej figury
          */
         void SetShadow(Shadow* shadow);
+        
+        virtual void Mirroring()=0;
     protected:
         /*
          * Metody zmieniajace punkty tana

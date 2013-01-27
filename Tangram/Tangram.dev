@@ -1,7 +1,7 @@
 [Project]
 FileName=Tangram.dev
 Name=Tangram
-UnitCount=6
+UnitCount=22
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -145,9 +145,9 @@ CompilerSet=9
 CompilerType=9
 
 [Unit7]
-FileName=utils\MinMaxUtils.cpp
+FileName=data\ActualMoveInfo.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -155,9 +155,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=utils\VectorUtils.cpp
+FileName=data\Constants.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -165,9 +165,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=data\ActualMoveInfo.cpp
+FileName=data\Rect.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -175,9 +175,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=data\Constants.h
+FileName=data\Rect.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -185,9 +185,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=data\Rect.cpp
+FileName=data\Shadow.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -195,9 +195,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=data\Rect.h
+FileName=data\Shadow.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -207,7 +207,7 @@ BuildCmd=
 [Unit13]
 FileName=data\Tan.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -217,7 +217,7 @@ BuildCmd=
 [Unit14]
 FileName=data\Tan.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -227,7 +227,7 @@ BuildCmd=
 [Unit15]
 FileName=data\Triangle.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -237,7 +237,7 @@ BuildCmd=
 [Unit16]
 FileName=data\Triangle.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -247,7 +247,7 @@ BuildCmd=
 [Unit17]
 FileName=data\vecmat.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -257,7 +257,7 @@ BuildCmd=
 [Unit18]
 FileName=data\vecmat.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -267,7 +267,7 @@ BuildCmd=
 [Unit19]
 FileName=panel\TangramPanel.cpp
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -277,7 +277,7 @@ BuildCmd=
 [Unit20]
 FileName=panel\TangramPanel.h
 CompileCpp=1
-Folder=Project2
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -285,9 +285,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=data\Shadow.cpp
+FileName=utils\MinMaxUtils.cpp
 CompileCpp=1
-Folder=
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000
@@ -295,9 +295,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=data\Shadow.h
+FileName=utils\VectorUtils.cpp
 CompileCpp=1
-Folder=
+Folder=Tangram
 Compile=1
 Link=1
 Priority=1000

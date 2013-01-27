@@ -61,6 +61,7 @@ class TangramDlg : public wxDialog
         void MouseLeftDown(wxMouseEvent& event);
         void MouseLeftUp(wxMouseEvent& event);
         void MouseMoved(wxMouseEvent& event);
+        void MouseLeftDoubleClick(wxMouseEvent& event);
         Tan* CheckIsIn(int x,int y);
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);

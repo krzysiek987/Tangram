@@ -71,3 +71,25 @@ void Rect::SetP4(wxPoint p4){
     ymin=MinMaxUtils::MinY(points[0],points[1],points[2],points[3]);
     ymax=MinMaxUtils::MaxY(points[0],points[1],points[2],points[3]);
 }
+
+void Rect::Mirroring() {
+    printf("rect dclick");
+    
+    Vector vec[4];
+    
+    vec[0].Set(start_vectors[0].GetX(),start_vectors[2].GetY());
+    vec[1].Set(start_vectors[1].GetX(),start_vectors[3].GetY());
+    vec[2].Set(start_vectors[2].GetX(),start_vectors[0].GetY());
+    vec[3].Set(start_vectors[3].GetX(),start_vectors[1].GetY());
+    
+    wxPoint temp_point;
+    Vector temp_vectors[4];
+    
+    for(int j=0;j<GetSize();j++){
+        temp_vectors[j] = matrix*vec[j];
+        start_vectors[j] = vec[j];
+        temp_point.x = temp_vectors[j].GetX();
+        temp_point.y = temp_vectors[j].GetY();
+        SetP(j+1,temp_point);
+    }   
+}

@@ -12,6 +12,7 @@ class TangramPanel : public wxPanel
             void mouseMoved(wxMouseEvent& event);
             void mouseDown(wxMouseEvent& event);
             void mouseReleased(wxMouseEvent& event);
+            void mouseLeftDoubleClick(wxMouseEvent& event);
         private:
             wxDialog* _parent;
             DECLARE_EVENT_TABLE()

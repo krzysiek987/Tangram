@@ -198,6 +198,17 @@ void TangramDlg::MouseMoved(wxMouseEvent& event){
         }
     };
 }
+/*
+ * Event podwójnego klikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ */
+void TangramDlg::MouseLeftDoubleClick(wxMouseEvent& event){
+    //sprawdzam czy klikniêcie trafia w jakiœ tan (jesli trafia to jest zwracany)
+    Tan* hit=CheckIsIn(event.GetX(), event.GetY());
+    if(hit != NULL){
+        //wstawiam do obiektu holded (aktualnie trzymanego) trafiony myszk¹ i pobieram do holdedX,holdedY wspó³rzedne klikniêcia
+        hit->Mirroring();
+    }
+}
 /**************************************** METODY SPRAWDZAJACE KLIKNIECIA **********************************************/
 /*
  * Metoda sprawdza czy w punkcie (x,y) jest jakas figura, jesli tak jest ona zwracana
