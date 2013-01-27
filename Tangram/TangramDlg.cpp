@@ -26,6 +26,8 @@ BEGIN_EVENT_TABLE(TangramDlg,wxDialog)
 	////Manual Code End
 	
 	EVT_CLOSE(TangramDlg::OnClose)
+	EVT_BUTTON(ID_NEXT,TangramDlg::NextClick)
+	EVT_BUTTON(ID_PREVIOUS,TangramDlg::PreviousClick)
 	
 	EVT_UPDATE_UI(ID_WXPANEL1,TangramDlg::WxPanel1UpdateUI)
 END_EVENT_TABLE()
@@ -92,38 +94,40 @@ void TangramDlg::CreateGUIControls()
 	//ustawiam na wstepnie flage odpowiadajaca za obrony na false i do aktualnie trzymanego obiektu wstawiam NULL
 	isRotateMode=false;
 	holded=NULL;
-	//dodanie cienia figury uk³adanej
-	int size = 12;
-	wxPoint points[12];
-	points[0] = wxPoint(200,200);
-	points[1] = wxPoint(200,314);
-	points[2] = wxPoint(485,314);
-	points[3] = wxPoint(485,200);
-	points[4] = wxPoint(428,200);
-	points[5] = wxPoint(428,257);
-	points[6] = wxPoint(371,257);
-	points[7] = wxPoint(371,200);
-	points[8] = wxPoint(314,200);
-	points[9] = wxPoint(314,257);
-	points[10] = wxPoint(257,257);
-	points[11] = wxPoint(257,200);
-	wxPoint check_points[12];
-	check_points[0] = wxPoint(198,198);
-	check_points[1] = wxPoint(198,316);
-	check_points[2] = wxPoint(489,316);
-	check_points[3] = wxPoint(487,198);
-	check_points[4] = wxPoint(426,198);
-	check_points[5] = wxPoint(426,255);
-	check_points[6] = wxPoint(373,255);
-	check_points[7] = wxPoint(373,198);
-	check_points[8] = wxPoint(312,198);
-	check_points[9] = wxPoint(312,255);
-	check_points[10] = wxPoint(259,255);
-	check_points[11] = wxPoint(259,198);
-	shadow.Set(size,points,check_points);
+	//dodanie cieni figury uk³adanej
 	
-	for(int i=0;i<TANS_NO;++i) {
-        tans[i]->SetShadow(&shadow);   
+	number_of_shadows = 0;
+	actual_shadow = -1;
+	int size;
+	wxPoint *points;
+	wxPoint *check_points;
+	std::fstream file;
+	file.open("tangrams.txt",std::ios::in);
+	if(file.good()) {
+    	file>>number_of_shadows;
+    	shadows = new Shadow[number_of_shadows];
+    	for(int i=0;i<number_of_shadows;++i) {
+        	file>>size;
+        	points = new wxPoint[size];
+        	check_points = new wxPoint[size];
+        	for(int j=0;j<size;++j) {
+                file>>points[j].x>>points[j].y;
+            }
+            for(int j=0;j<size;++j) {
+                file>>check_points[j].x>>check_points[j].y;
+            }
+            shadows[i].Set(size,points,check_points);
+            delete check_points;
+            delete points;
+        }
+    	file.close();
+    }
+	
+	if(number_of_shadows>0) {
+        actual_shadow = 0;
+    	for(int i=0;i<TANS_NO;++i) {
+            tans[i]->SetShadow(shadows);   
+        }
     }
 
 }
@@ -158,7 +162,7 @@ void TangramDlg::RepaintMainPanel(){
     
     dc.SetPen(wxPen(wxColour(0,0,0), 3 ));
     dc.SetBrush(wxBrush(wxColour(150,150,150)));
-    dc.DrawPolygon(shadow.GetSize(),shadow.GetPoints());
+    dc.DrawPolygon(shadows[actual_shadow].GetSize(),shadows[actual_shadow].GetPoints());
     
     PaintTans(dc);   
 }
@@ -319,12 +323,12 @@ bool TangramDlg::Check()
 {
     double degrees = 0.0;
     double angle;
-    wxPoint* shadow_points = shadow.GetCheckPoints();
-    int shadow_size = shadow.GetSize();
+    wxPoint* shadow_points = shadows[actual_shadow].GetCheckPoints();
+    int shadow_size = shadows[actual_shadow].GetSize();
     for(int i=0;i<TANS_NO;++i){
         wxPoint* tan_points = tans[i]->GetPoints();
         for(int j=0;j<tans[i]->GetSize();++j) { 
-            for(int k=0;k<shadow.GetSize();++k){
+            for(int k=0;k<shadow_size;++k){
                 angle = VectorUtils::AngleBetweenPoints(shadow_points[k],tan_points[j],shadow_points[(k+1)%shadow_size]);
                 if(VectorUtils::GetDirection(shadow_points[k].x,shadow_points[k].y,tan_points[j].x,tan_points[j].y,
                         shadow_points[(k+1)%shadow_size].x,shadow_points[(k+1)%shadow_size].y)>0){
@@ -336,7 +340,7 @@ bool TangramDlg::Check()
             degrees = 0.0;
         }
         wxPoint tan_center = tans[i]->GetCenter();
-        for(int k=0;k<shadow.GetSize();++k){
+        for(int k=0;k<shadow_size;++k){
             angle = VectorUtils::AngleBetweenPoints(shadow_points[k],tan_center,shadow_points[(k+1)%shadow_size]);
             if(VectorUtils::GetDirection(shadow_points[k].x,shadow_points[k].y,tan_center.x,tan_center.y,
                     shadow_points[(k+1)%shadow_size].x,shadow_points[(k+1)%shadow_size].y)>0){
@@ -350,3 +354,43 @@ bool TangramDlg::Check()
     return true;
 }
 
+
+/*
+ * NextClick
+ */
+void TangramDlg::NextClick(wxCommandEvent& event)
+{
+	++actual_shadow;
+	if(actual_shadow+1==number_of_shadows)
+	{ 
+        Next->Enable(false);
+    }
+    Previous->Enable(true);
+    
+    for(int i=0;i<TANS_NO;++i){
+        tans[i]->GetBack();
+        tans[i]->SetShadow(&(shadows[actual_shadow]));
+    }
+    
+    Label->Hide();
+}
+
+/*
+ * PreviousClick
+ */
+void TangramDlg::PreviousClick(wxCommandEvent& event)
+{
+	--actual_shadow;
+	if(actual_shadow-1<0)
+	{ 
+        Previous->Enable(false);
+    }
+    Next->Enable(true);
+    
+    for(int i=0;i<TANS_NO;++i){
+        tans[i]->GetBack();
+        tans[i]->SetShadow(&(shadows[actual_shadow]));
+    }
+    
+    Label->Hide();
+}

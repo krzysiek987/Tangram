@@ -7,7 +7,7 @@
 ///            TangramDlg class declaration
 ///
 ///------------------------------------------------------------------
-//-mwindows
+//
 #ifndef __TANGRAMDLG_H__
 #define __TANGRAMDLG_H__
 
@@ -41,6 +41,7 @@
 #include "panel/TangramPanel.h"
 #include "data/Constants.h"
 #include "data/vecmat.h"
+#include <fstream>
 
 ////Dialog Style Start
 #undef TangramDlg_STYLE
@@ -68,6 +69,8 @@ class TangramDlg : public wxDialog
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);
         bool Check();
+		void NextClick(wxCommandEvent& event);
+		void PreviousClick(wxCommandEvent& event);
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
@@ -81,7 +84,9 @@ class TangramDlg : public wxDialog
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
 		Tan *tans[TANS_NO];
-		Shadow shadow;
+		Shadow* shadows;
+		int actual_shadow;
+		int number_of_shadows;
 		bool isRotateMode;
 		Tan *holded;
 		int holdedX,holdedY;

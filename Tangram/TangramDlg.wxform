@@ -96,6 +96,7 @@ object frmNewForm: TfrmNewForm
         Height = 25
         Caption = 'Poprzedni'
         TabOrder = 0
+        EVT_BUTTON = 'PreviousClick'
         Wx_BKColor = clBlack
         Wx_ButtonStyle = []
         Wx_Class = 'wxButton'
@@ -135,6 +136,7 @@ object frmNewForm: TfrmNewForm
         Height = 25
         Caption = 'Nast'#281'pny'
         TabOrder = 1
+        EVT_BUTTON = 'NextClick'
         Wx_BKColor = clBlack
         Wx_ButtonStyle = []
         Wx_Class = 'wxButton'
@@ -184,7 +186,7 @@ object frmNewForm: TfrmNewForm
         Wx_ControlOrientation = wxControlVertical
         Wx_FGColor = clBlack
         Wx_GeneralStyle = []
-        Wx_Hidden = True
+        Wx_Hidden = False
         Wx_IDName = 'ID_LABEL'
         Wx_IDValue = 1007
         Wx_LabelStyle = []

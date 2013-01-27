@@ -16,7 +16,7 @@ public:
     }
     //norma wektora
     static double Norm(wxPoint p1){
-        return sqrt((double)p1.x*(double)p1.x+(double)p1.y*p1.y);
+        return sqrt((double)p1.x*(double)p1.x+(double)p1.y*(double)p1.y);
     }
     //k¹t miedzy dwoma wektorami
     static double AngleBetweenVectors(wxPoint p1,wxPoint p2){
@@ -65,19 +65,25 @@ public:
          return (b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y);
     }
     /*
-     * metoda sprawdza czy odcinki [a,b]  i  [c,d] przecinaj¹ siê
+     * metoda sprawdza czy odcinki [a,b]  i  [c,d] przecinaj¹ siê 
      */
-    static bool IsCrossing(wxPoint a,wxPoint b, wxPoint c, wxPoint d){ 
+    static bool IsCrossing(wxPoint a,wxPoint b, wxPoint c, wxPoint d){
+        //Sprzedzanie czy któryœ z koñców drugirgo odcinka nie le¿y (lub prawie le¿y) na pierwszym i na odwrót 
+        if(Norm(c-a)+Norm(b-c)-Norm(b-a)<0.05) return false;
+        if(Norm(d-a)+Norm(b-d)-Norm(b-a)<0.05) return false;
+        if(Norm(a-c)+Norm(d-a)-Norm(d-c)<0.05) return false;
+        if(Norm(b-c)+Norm(d-b)-Norm(d-c)<0.05) return false;
+        
+        //W³aœciwy algorytm sprawdzania przecinania siê odcinków
         int d1=CountDet(a,b,c), d2=CountDet(a,b,d);
         int d3=CountDet(c,d,a), d4=CountDet(c,d,b);
         
         return abs(Sign(d1) - Sign(d2)) + abs(Sign(d3) - Sign(d4))==4;
     }
 
-    //nazwyczajniejsze signum z tolerancj¹ (-80,80) dla wartoœci 0 
-    //(pozwala to niezauwa¿anie nachodziæ na siebie tanom - wymagane, aby dobrze dzia³a³o przyci¹ganie)
+    //nazwyczajniejsze signum
     static int Sign(int x){
-        if(abs(x)<80) return 0;
+        if(x==0) return 0;
         if(x>0) return 1; 
         return -1;   
     } 
