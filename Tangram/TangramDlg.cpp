@@ -49,15 +49,27 @@ void TangramDlg::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
-	WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
+	WxBoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	this->SetSizer(WxBoxSizer1);
 	this->SetAutoLayout(true);
 
 	WxPanel1 = new TangramPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(800, 600));
 	WxBoxSizer1->Add(WxPanel1, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5);
 
-	WxButton1 = new wxButton(this, ID_WXBUTTON1, _("WxButton1"), wxPoint(815, 292), wxSize(75, 25), 0, wxDefaultValidator, _("WxButton1"));
-	WxBoxSizer1->Add(WxButton1, 0, wxALIGN_CENTER | wxALL, 5);
+	WxBoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
+	WxBoxSizer1->Add(WxBoxSizer2, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5);
+
+	Previous = new wxButton(this, ID_PREVIOUS, _("Poprzedni"), wxPoint(5, 7), wxSize(75, 25), 0, wxDefaultValidator, _("Previous"));
+	Previous->Enable(false);
+	WxBoxSizer2->Add(Previous, 0, wxALIGN_RIGHT | wxALL, 5);
+
+	Next = new wxButton(this, ID_NEXT, _("Nastêpny"), wxPoint(90, 7), wxSize(75, 25), 0, wxDefaultValidator, _("Next"));
+	WxBoxSizer2->Add(Next, 0, wxALIGN_RIGHT | wxALL, 5);
+
+	Label = new wxStaticText(this, ID_LABEL, _("U³o¿y³eœ poprawnie!!!"), wxPoint(175, 5), wxDefaultSize, 0, _("Label"));
+	Label->SetForegroundColour(wxColour(255,0,0));
+	Label->SetFont(wxFont(14, wxSWISS, wxITALIC, wxBOLD, false));
+	WxBoxSizer2->Add(Label, 0, wxALIGN_RIGHT | wxALL, 5);
 
 	SetTitle(_("Tangram"));
 	SetIcon(wxNullIcon);
@@ -68,14 +80,15 @@ void TangramDlg::CreateGUIControls()
 	Center();
 	
 	////GUI Items Creation End
+	Label->Hide();
 	//inicjalizuje figury (tak jak sa pociete)
-	tans[0]=new Rect(wxPoint(80,160),wxPoint(40,120),wxPoint(80,80),wxPoint(120,120)); //kwadrat
-	tans[1]=new Rect(wxPoint(120,120),wxPoint(120,40),wxPoint(160,0),wxPoint(160,80)); // rownoleglobok
-	tans[2]=new Triangle(wxPoint(0,160),wxPoint(80,160),wxPoint(40,120)); //maly trojkat dol
-	tans[3]=new Triangle(wxPoint(80,160),wxPoint(160,160),wxPoint(160,80)); // trojkat dol
-	tans[4]=new Triangle(wxPoint(0,160),wxPoint(0,0),wxPoint(80,80)); //duzy trojkat lewa
-	tans[5]=new Triangle(wxPoint(120,120),wxPoint(120,40),wxPoint(80,80)); //trojkat srodek
-	tans[6]=new Triangle(wxPoint(0,0),wxPoint(160,0),wxPoint(80,80)); // duzy trojkat gora
+	tans[0]=new Rect(wxPoint(723,30),wxPoint(723,87),wxPoint(780,87),wxPoint(780,30)); //kwadrat
+	tans[1]=new Rect(wxPoint(599,30),wxPoint(656,87),wxPoint(713,87),wxPoint(656,30)); // rownoleglobok
+	tans[2]=new Triangle(wxPoint(750,117),wxPoint(636,231),wxPoint(750,231)); //duzy trojkat
+	tans[3]=new Triangle(wxPoint(750,261),wxPoint(636,375),wxPoint(750,375)); //duzy trojkat
+	tans[4]=new Triangle(wxPoint(693,405),wxPoint(636,463),wxPoint(750,463)); //œredni tójk¹t
+	tans[5]=new Triangle(wxPoint(750,493),wxPoint(693,550),wxPoint(750,550)); //ma³y tójk¹t
+    tans[6]=new Triangle(wxPoint(683,493),wxPoint(626,550),wxPoint(683,550)); //ma³y tójk¹t
 	//ustawiam na wstepnie flage odpowiadajaca za obrony na false i do aktualnie trzymanego obiektu wstawiam NULL
 	isRotateMode=false;
 	holded=NULL;
@@ -136,9 +149,12 @@ void TangramDlg::RepaintMainPanel(){
     int w,h;
     wxClientDC dc1(WxPanel1);
     wxBufferedDC dc(&dc1); 
-    dc.SetBackground(wxBrush(RGB(56,89,223)));
+    dc.SetBackground(wxBrush(RGB(56,89,223))); 
     dc.Clear(); 
     WxPanel1->GetSize(&w,&h);
+    
+    dc.SetBrush(wxColour(70,70,70));
+    dc.DrawRectangle(WIDTH,0,800-WIDTH,HEIGHT);
     
     dc.SetPen(wxPen(wxColour(0,0,0), 3 ));
     dc.SetBrush(wxBrush(wxColour(150,150,150)));
@@ -159,7 +175,7 @@ void TangramDlg::PaintTans(wxBufferedDC& dc){
 }
 /******************************** EVENTY ****************************************/
 /*
- * Event klikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ * Event klikniecia lewym przyciskiem myszy przekazywany z analogicznego eventu w TangramPanel
  */
 void TangramDlg::MouseLeftDown(wxMouseEvent& event){
     //sprawdzam czy klikniêcie trafia w jakiœ tan (jesli trafia to jest zwracany)
@@ -172,7 +188,7 @@ void TangramDlg::MouseLeftDown(wxMouseEvent& event){
     }
 }
 /*
- * Event odklikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ * Event odklikniecia lewym przyciskiem myszy przekazywany z analogicznego eventu w TangramPanel
  */
 void TangramDlg::MouseLeftUp(wxMouseEvent& event){
     //zeruje informacje o aktualnie trzymanym obiekcie i miejscu klikniêcia
@@ -180,7 +196,10 @@ void TangramDlg::MouseLeftUp(wxMouseEvent& event){
     holded=NULL;
     holdedX=0;
     holdedY=0;
-    Check();
+    if(Check()) {
+        Label->Show();
+    }
+    else Label->Hide();
 }
 /*
  * Event przesuniecia myszki przekazywany z analogicznego eventu w TangramPanel
@@ -199,14 +218,25 @@ void TangramDlg::MouseMoved(wxMouseEvent& event){
     };
 }
 /*
- * Event podwójnego klikniecia lewym przyciskiem przekazywany z analogicznego eventu w TangramPanel
+ * Event podwójnego klikniecia lewym przyciskiem myszy przekazywany z analogicznego eventu w TangramPanel
  */
 void TangramDlg::MouseLeftDoubleClick(wxMouseEvent& event){
     //sprawdzam czy klikniêcie trafia w jakiœ tan (jesli trafia to jest zwracany)
     Tan* hit=CheckIsIn(event.GetX(), event.GetY());
     if(hit != NULL){
-        //wstawiam do obiektu holded (aktualnie trzymanego) trafiony myszk¹ i pobieram do holdedX,holdedY wspó³rzedne klikniêcia
-        hit->Mirroring();
+        //Symetri tana
+        hit->Mirroring(tans);
+    }
+}
+/*
+ * Event klikniecia prawym przyciskiem myszy przekazywany z analogicznego eventu w TangramPanel
+ */
+void TangramDlg::MouseRightClick(wxMouseEvent& event){
+    //sprawdzam czy klikniêcie trafia w jakiœ tan (jesli trafia to jest zwracany)
+    Tan* hit=CheckIsIn(event.GetX(), event.GetY());
+    if(hit != NULL){
+        //przeniesienie tana do zasobnika
+        hit->GetBack();
     }
 }
 /**************************************** METODY SPRAWDZAJACE KLIKNIECIA **********************************************/
@@ -317,7 +347,6 @@ bool TangramDlg::Check()
         if(abs(degrees-360.0) > EPSILON) return false;
         degrees = 0.0;
     }
-    printf("U³o¿one!!!\n");
     return true;
 }
 

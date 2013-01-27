@@ -12,7 +12,7 @@ class Rect : public Tan
 
     ActualMoveInfo Move(int x,int y, Tan** tans);
     
-    void Mirroring();
+    void Mirroring(Tan** tans);
 protected:
     void Set(wxPoint p1,wxPoint p2,wxPoint p3);
     void Set(wxPoint p1,wxPoint p2,wxPoint p3, wxPoint p4);

@@ -26,6 +26,7 @@
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
+#include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -62,6 +63,7 @@ class TangramDlg : public wxDialog
         void MouseLeftUp(wxMouseEvent& event);
         void MouseMoved(wxMouseEvent& event);
         void MouseLeftDoubleClick(wxMouseEvent& event);
+        void MouseRightClick(wxMouseEvent& event);
         Tan* CheckIsIn(int x,int y);
 	    void MoveHoldedTan(wxMouseEvent& event);
         void RotateHoldedTan(wxMouseEvent& event);
@@ -71,7 +73,10 @@ class TangramDlg : public wxDialog
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxButton *WxButton1;
+		wxStaticText *Label;
+		wxButton *Next;
+		wxButton *Previous;
+		wxBoxSizer *WxBoxSizer2;
 		wxPanel *WxPanel1;
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
@@ -90,7 +95,9 @@ class TangramDlg : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
-			ID_WXBUTTON1 = 1003,
+			ID_LABEL = 1007,
+			ID_NEXT = 1006,
+			ID_PREVIOUS = 1005,
 			ID_WXPANEL1 = 1002,
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

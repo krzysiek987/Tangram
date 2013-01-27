@@ -273,3 +273,17 @@ void Tan::TranslateTan(wxPoint translation)
 void Tan::SetShadow(Shadow* shadow) {
   this->shadow = shadow;   
 }
+
+void Tan::GetBack() {
+    wxPoint temp_point;
+    
+    for(int j=0;j<GetSize();j++){
+        temp_point.x = start_vectors[j].GetX();
+        temp_point.y = start_vectors[j].GetY();
+        SetP(j+1,temp_point);
+    }   
+    
+    matrix.data[0][0] = 1.0; matrix.data[0][1] = 0.0; matrix.data[0][2] = 0.0;
+    matrix.data[1][0] = 0.0; matrix.data[1][1] = 1.0; matrix.data[1][2] = 0.0;
+    matrix.data[2][0] = 0.0; matrix.data[2][1] = 0.0; matrix.data[2][2] = 1.0;
+}
