@@ -43,10 +43,6 @@ class Tan
          */
         bool Conflicts(Tan* toCheck,Tan** tans);      
         /*
-         * Metoda sprawdza czy wierzcholki tana toCheck le¿a w tanie conflicted lub czy wierzcholki tana conflicted le¿a w tanie toCheck
-         */
-        //bool IsInner(Tan* toCheck, Tan* conflicted);    
-        /*
          * Metoda sprawdzajaca czy punkt (x,y) trafia w tan
          */
         bool IsInner(int x,int y);
@@ -62,7 +58,9 @@ class Tan
          * Metoda zwraca œrodek tana
          */ 
         wxPoint GetCenter();  
-        
+        /*
+         * Metoda próbuje przesun¹æ Tan o wektor (x,y) + ewentualny wektor wynikaj¹cy z przyci¹gania
+         */     
         ActualMoveInfo Move(int x,int y, Tan** tans);
         /*
          * Metoda zwraca wartoœæ przesuniêcia dla przyci¹gania
@@ -92,7 +90,9 @@ class Tan
          * Metoda ustawiaj¹ca tana w zasobniku
          */
         void GetBack();
-        
+        /*
+         * Metoda wirtualna odwracaj¹ca tan
+         */
         virtual void Mirroring(Tan** tans)=0;
     protected:
         /*
@@ -105,7 +105,7 @@ class Tan
         virtual void SetP4(wxPoint p4)=0;
         //wspolrzedne prostok¹ta na którym opisany jest tan
         int xmin, xmax, ymin, ymax;
-        //wierzcholki tana
+        //wierzcho³ki startowe tana (z zasobnika)
         Vector start_vectors[4];
         //wierzcholki tana
         wxPoint points[4];

@@ -62,18 +62,6 @@ bool Tan::Conflicts(Tan* toCheck,Tan** tans){
     return false;
 }
 
-/*bool Tan::IsInner(Tan* toCheck, Tan* conflicted){
-    wxPoint* pointsToCheck=toCheck->GetPoints();
-    wxPoint* pointsConflicted=conflicted->GetPoints();
-    for(int i=0;i<toCheck->GetSize();i++){
-        if(conflicted->IsInner(pointsToCheck[i].x,pointsToCheck[i].y)) return true;    
-    }   
-    for(int i=0;i<conflicted->GetSize();i++){
-        if(toCheck->IsInner(pointsConflicted[i].x,pointsConflicted[i].y)) return true;    
-    }
-    return false;
-}*/
-
 bool Tan::IsInner(int x,int y){
     double degrees=0.0;
     wxPoint center=wxPoint(x,y);
